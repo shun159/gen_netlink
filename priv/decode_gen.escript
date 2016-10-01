@@ -875,6 +875,36 @@ define_consts() ->
             {timeout_udp, huint32}
         ]},
 
+        {{ipvs, stats64}, [
+            {unspec,    none},
+            {conns,     huint64},
+            {inpkts,    huint64},
+            {outpkts,   huint64},
+            {inbytes,   huint64},
+            {outbytes,  huint64},
+            {cps,       huint64},
+            {inpps,     huint64},
+            {outpps,    huint64},
+            {inbps,     huint64},
+            {outbps,    huint64},
+            {pad,       none}
+        ]},
+
+        {{ipvs, stats}, [
+            {unspec,    none},
+            {conns,     huint32},
+            {inpkts,    huint32},
+            {outpkts,   huint32},
+            {inbytes,   huint64},
+            {outbytes,  huint64},
+            {cps,       huint32},
+            {inpps,     huint32},
+            {outpps,    huint32},
+            {inbps,     huint32},
+            {outbps,    huint32},
+            {pad,       none}
+        ]},
+
         {{ipvs, service, attributes}, [
             {unspec, none},
             {address_family, huint16},
@@ -886,9 +916,9 @@ define_consts() ->
             {flags, struct},
             {timeout, huint32},
             {netmask, huint32},
-            {stats, none},
+            {stats, {nested, {ipvs, stats}}},
             {pe_name, string},
-            {stats64, none}
+            {stats64, {nested, {ipvs, stats64}}}
         ]},
         {{ipvs, dest, attributes}, [
             {unspec, none},
@@ -901,9 +931,9 @@ define_consts() ->
             {active_conns, huint32},
             {inact_conns, huint32},
             {persist_conns, huint32},
-            {stats, none},
+            {stats, {nested, {ipvs, stats}}},
             {addr_family, huint16},
-            {stats64, none}
+            {stats64, {nested, {ipvs, stats64}}}
         ]},
         {{ipvs, daemon, attributes}, [
             {state, huint32},
