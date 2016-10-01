@@ -565,16 +565,20 @@ define_consts() ->
             {mask, flag32},          %% identify which flags to change
             {flags, flag32}         %% value of these flags (__u32)
         ]},
-        {{nfqnl, cfg, msg, mask}, [{fail_open, flag},
+        {{nfqnl, cfg, msg, mask}, [
+            {fail_open, flag},
             {conntrack, flag},
             {gso, flag},
             {uid_gid, flag},
-            {secctx, flag}]},
-        {{nfqnl, cfg, msg, flags}, [{fail_open, flag},
+            {secctx, flag}
+        ]},
+        {{nfqnl, cfg, msg, flags}, [
+            {fail_open, flag},
             {conntrack, flag},
             {gso, flag},
             {uid_gid, flag},
-            {secctx, flag}]},
+            {secctx, flag}
+        ]},
 
         {{nfqnl, attr}, [
             {unspec, none},
@@ -597,52 +601,70 @@ define_consts() ->
             {gid, uint32}                                     %% __u32 sk gid
         ]},
 
-        {{nfqnl, attr, ct_info}, [established,
+        {{nfqnl, attr, ct_info}, [
+            established,
             related,
             new,
             established_reply,
             related_reply,
             new_reply]},
 
-        {{nft, expr, attributes}, [{unspec, none},
+        {{nft, expr, attributes}, [
+            {unspec, none},
             {name, string},
-            {data, binary}]},
+            {data, binary}
+        ]},
 
-        {{nft, immediate, attributes}, [{unspec, none},
+        {{nft, immediate, attributes}, [
+            {unspec, none},
             {dreg, uint32},
-            {data, {nested, {nft, data, attributes}}}]},
+            {data, {nested, {nft, data, attributes}}}
+        ]},
 
-        {{nft, data, attributes}, [{unspec, none},
+        {{nft, data, attributes}, [
+            {unspec, none},
             {value, binary},
-            {verdict, {nested, {nft, verdict, attributes}}}]},
-        {{nft, verdict, attributes}, [{unspec, none},
+            {verdict, {nested, {nft, verdict, attributes}}}
+        ]},
+        {{nft, verdict, attributes}, [
+            {unspec, none},
             {code, atom32},
-            {chain, string}]},
-        {{nft, verdict, attributes, code}, [{continue, {atom, 4294967296 - 1}},
+            {chain, string}
+        ]},
+        {{nft, verdict, attributes, code}, [
+            {continue, {atom, 4294967296 - 1}},
             {break, {atom, 4294967296 - 2}},
             {jump, {atom, 4294967296 - 3}},
             {goto, {atom, 4294967296 - 4}},
-            {return, {atom, 4294967296 - 5}}]},
+            {return, {atom, 4294967296 - 5}}
+        ]},
 
-        {{nft, bitwise, attributes}, [{unspec, none},
+        {{nft, bitwise, attributes}, [
+            {unspec, none},
             {sreg, uint32},
             {dreg, uint32},
             {len, uint32},
             {mask, {nested, {nft, data, attributes}}},
-            {'xor', {nested, {nft, data, attributes}}}]},
+            {'xor', {nested, {nft, data, attributes}}}
+        ]},
 
-        {{nft, lookup, attributes}, [{unspec, none},
+        {{nft, lookup, attributes}, [
+            {unspec, none},
             {set, string},
             {sreg, uint32},
             {dreg, uint32},
-            {set_id, uint32}]},
+            {set_id, uint32}
+        ]},
 
-        {{nft, meta, attributes}, [{unspec, none},
+        {{nft, meta, attributes}, [
+            {unspec, none},
             {dreg, uint32},
             {key, atom32},
-            {sreg, uint32}]},
+            {sreg, uint32}
+        ]},
 
-        {{nft, meta, attributes, key}, [len,
+        {{nft, meta, attributes, key}, [
+            len,
             protocol,
             priority,
             mark,
@@ -667,25 +689,32 @@ define_consts() ->
             oifgroup,
             cgroup]},
 
-        {{nft, payload, attributes}, [{unspec, none},
+        {{nft, payload, attributes}, [
+            {unspec, none},
             {dreg, uint32},
             {base, atom32},
             {offset, uint32},
-            {len, uint32}]},
+            {len, uint32}
+        ]},
         {{nft, payload, attributes, base}, [ll_header, network_header, transport_header]},
 
-        {{nft, reject, attributes}, [{unspec, none},
+        {{nft, reject, attributes}, [
+            {unspec, none},
             {type, atom32},
-            {icmp_code, atom}]},
+            {icmp_code, atom}
+        ]},
         {{nft, reject, attributes, type}, [icmp_unreach, tcp_rst, icmpx_unreach]},
         {{nft, reject, attributes, icmp_code}, [no_route, port_unreach, host_unreach, admin_prohibited]},
 
-        {{nft, ct, attributes}, [{unspec, none},
+        {{nft, ct, attributes}, [
+            {unspec, none},
             {dreg, uint32},
             {key, atom32},
             {direction, uint8},
-            {sreg, uint32}]},
-        {{nft, ct, attributes, key}, [state,
+            {sreg, uint32}
+        ]},
+        {{nft, ct, attributes, key}, [
+            state,
             direction,
             status,
             mark,
@@ -700,46 +729,61 @@ define_consts() ->
             proto_dst,
             labels]},
 
-        {{nft, queue, attributes}, [{unspec, none},
+        {{nft, queue, attributes}, [
+            {unspec, none},
             {num, uint16},
             {total, uint16},
-            {flags, flag16}]},
-        {{nft, queue, attributes, flags}, [{bypass, flag},
-            {cpu_fanout, flag},
-            {mask, flag}]},
+            {flags, flag16}
+        ]},
 
-        {{nft, cmp, attributes}, [{unspec, none},
+        {{nft, queue, attributes, flags}, [
+            {bypass, flag},
+            {cpu_fanout, flag},
+            {mask, flag}
+        ]},
+
+        {{nft, cmp, attributes}, [
+            {unspec, none},
             {sreg, uint32},
             {op, atom32},
-            {data, {nested, {nft, data, attributes}}}]},
+            {data, {nested, {nft, data, attributes}}}
+        ]},
 
         {{nft, cmp, attributes, op}, [eq, neq, lt, lte, gt, gte]},
 
-        {{nft, match, attributes}, [{unspec, none},
+        {{nft, match, attributes}, [
+            {unspec, none},
             {name, string},
             {rev, uint32},
-            {info, binary}]},
+            {info, binary}
+        ]},
 
-        {{nft, target, attributes}, [{unspec, none},
+        {{nft, target, attributes}, [
+            {unspec, none},
             {name, string},
             {rev, uint32},
-            {info, binary}]},
+            {info, binary}
+        ]},
 
         {{nft, list, attributes, expr}, [{unspec, none},
             {expr, {nested, {nft, expr, attributes}}}]},
 
-        {{nft, counter, attributes}, [{unspec, none},
+        {{nft, counter, attributes}, [
+            {unspec, none},
             {bytes, uint64},
-            {packets, uint64}]},
+            {packets, uint64}
+        ]},
 
-        {{nft, table, attributes}, [{unspec, none},
+        {{nft, table, attributes}, [
+            {unspec, none},
             {name, string},
             {flags, flag32},
             {use, uint32}
         ]},
         {{nft, table, attributes, flags}, [{dormant, flag}]},
 
-        {{nft, chain, attributes}, [{unspec, none},
+        {{nft, chain, attributes}, [
+            {unspec, none},
             {table, string},
             {handle, uint64},
             {name, string},
@@ -749,13 +793,16 @@ define_consts() ->
             {type, string},
             {counters, {nested, {nft, counter, attributes}}}
         ]},
-        {{nft, chain, attributes, hook}, [{unspec, none},
+        {{nft, chain, attributes, hook}, [
+            {unspec, none},
             {hooknum, uint32},
             {priority, int32},
-            {dev, string}]},
+            {dev, string}
+        ]},
         {{nft, chain, attributes, policy}, [drop, accept, stolen, queue, repeat, stop]},
 
-        {{nft, rule, attributes}, [{unspec, none},
+        {{nft, rule, attributes}, [
+            {unspec, none},
             {table, string},
             {chain, string},
             {handle, uint64},
@@ -765,7 +812,8 @@ define_consts() ->
             {userdata, binary}
         ]},
 
-        {{nft, set, attributes}, [{unspec, none},
+        {{nft, set, attributes}, [
+            {unspec, none},
             {table, string},
             {name, string},
             {flags, flag32},
@@ -781,14 +829,17 @@ define_consts() ->
         ]},
         {{nft, set, attributes, policy}, [drop, accept, stolen, queue, repeat, stop]},
 
-        {{nft, set, attributes, flags}, [{anonymous, flag},
+        {{nft, set, attributes, flags}, [
+            {anonymous, flag},
             {constant, flag},
             {interval, flag},
             {map, flag},
             {timeout, flag},
-            {eval, flag}]},
+            {eval, flag}
+        ]},
 
-        {{nft, set, elem, list, attributes}, [{unspec, none},
+        {{nft, set, elem, list, attributes}, [
+            {unspec, none},
             {table, string},
             {set, string},
             {elements, {nested, {nft, set, elem, list, elements}}},
@@ -798,7 +849,8 @@ define_consts() ->
         {{nft, set, elem, list, elements}, [{unspec, none},
             {element, {nested, {nft, set, ext, attributes}}}]},
 
-        {{nft, set, ext, attributes}, [{unspec, none},
+        {{nft, set, ext, attributes}, [
+            {unspec, none},
             {key, {nested, {nft, data, attributes}}},
             {data, {nested, {nft, data, attributes}}},
             {flags, flag32},
@@ -809,12 +861,14 @@ define_consts() ->
         ]},
         {{nft, set, ext, attributes, flags}, [{interval_end, flag}]},
 
-        {{nft, gen, attributes}, [{unspec, none},
+        {{nft, gen, attributes}, [
+            {unspec, none},
             {id, uint32}
         ]},
 
 
-        {{genl, ctrl, cmd}, [unspec,
+        {{genl, ctrl, cmd}, [
+            unspec,
             newfamily,
             delfamily,
             getfamily,
@@ -823,9 +877,11 @@ define_consts() ->
             getops,
             newmcast_grp,
             delmcast_grp,
-            getmcast_grp]},
+            getmcast_grp
+        ]},
 
-        {{genl, ctrl, attr}, [{unspec, none},
+        {{genl, ctrl, attr}, [
+            {unspec, none},
             {family_id, {hatom16, {protocol, subsys}}},
             {family_name, string},
             {version, huint32},
@@ -835,19 +891,23 @@ define_consts() ->
             {mcast_groups, {nested, mcast_groups}}
         ]},
 
-        {{genl, ctrl, attr, op}, [{unspec, none},
+        {{genl, ctrl, attr, op}, [
+            {unspec, none},
             {id, huint32},
             {flags, huint32}
         ]},
-        {{genl, ctrl, attr, mcast_grp}, [{unspec, none},
+        {{genl, ctrl, attr, mcast_grp}, [
+            {unspec, none},
             {name, string},
             {id, huint32}
         ]},
 
-        {{linkinfo, gtp}, [{unspec, none},
+        {{linkinfo, gtp}, [
+            {unspec, none},
             {fd0, huint32},
             {fd1, huint32},
-            {hashsize, huint32}]},
+            {hashsize, huint32}
+        ]},
 
         {{gtp, cmd}, [new, delete, get]},
 
@@ -861,18 +921,19 @@ define_consts() ->
             {flow, huint16},
             {net_ns_fd, huint32},
             {i_tid, huint32},
-            {o_tid, huint32}]},
+            {o_tid, huint32}
+        ]},
 
         {{ipvs, cmd}, [unspec, new_service, set_service, del_service, get_service, new_dest, set_dest, del_dest, get_dest]},
 
         {{ipvs, attrs}, [
-            {unspec, none},
-            {service, {nested, {ipvs, service, attributes}}},
-            {dest, {nested, {ipvs, dest, attributes}}},
-            {daemon, {nested, {ipvs, daemon, attributes}}},
-            {timeout_tcp, huint32},
-            {timeout_tcp_fin, huint32},
-            {timeout_udp, huint32}
+            {unspec,            none},
+            {service,           {nested, {ipvs, service, attributes}}},
+            {dest,              {nested, {ipvs, dest, attributes}}},
+            {daemon,            {nested, {ipvs, daemon, attributes}}},
+            {timeout_tcp,       huint32},
+            {timeout_tcp_fin,   huint32},
+            {timeout_udp,       huint32}
         ]},
 
         {{ipvs, stats64}, [
@@ -906,44 +967,44 @@ define_consts() ->
         ]},
 
         {{ipvs, service, attributes}, [
-            {unspec, none},
-            {address_family, huint16},
-            {protocol, huint16},
-            {address, binary},
-            {port, uint16},
-            {fwmark, huint32},
-            {sched_name, string},
-            {flags, struct},
-            {timeout, huint32},
-            {netmask, huint32},
-            {stats, {nested, {ipvs, stats}}},
-            {pe_name, string},
-            {stats64, {nested, {ipvs, stats64}}}
+            {unspec,            none},
+            {address_family,    huint16},
+            {protocol,          huint16},
+            {address,           binary},
+            {port,              uint16},
+            {fwmark,            huint32},
+            {sched_name,        string},
+            {flags,             struct},
+            {timeout,           huint32},
+            {netmask,           huint32},
+            {stats,             {nested, {ipvs, stats}}},
+            {pe_name,           string},
+            {stats64,           {nested, {ipvs, stats64}}}
         ]},
         {{ipvs, dest, attributes}, [
-            {unspec, none},
-            {address, binary},
-            {port, uint16},
-            {fwd_method, huint32},
-            {weight, huint32},
-            {u_threshold, huint32},
-            {l_threshold, huint32},
-            {active_conns, huint32},
-            {inact_conns, huint32},
+            {unspec,        none},
+            {address,       binary},
+            {port,          uint16},
+            {fwd_method,    huint32},
+            {weight,        huint32},
+            {u_threshold,   huint32},
+            {l_threshold,   huint32},
+            {active_conns,  huint32},
+            {inact_conns,   huint32},
             {persist_conns, huint32},
-            {stats, {nested, {ipvs, stats}}},
-            {addr_family, huint16},
-            {stats64, {nested, {ipvs, stats64}}}
+            {stats,         {nested, {ipvs, stats}}},
+            {addr_family,   huint16},
+            {stats64,       {nested, {ipvs, stats64}}}
         ]},
         {{ipvs, daemon, attributes}, [
-            {state, huint32},
-            {mcast_ifn, string},
-            {sync_id, huint32},
-            {sync_maxlen, huint16},
-            {mcast_group, huint32},
-            {mcast_group6, none},
-            {mcast_port, huint16},
-            {ttl, uint8}
+            {state,         huint32},
+            {mcast_ifn,     string},
+            {sync_id,       huint32},
+            {sync_maxlen,   huint16},
+            {mcast_group,   huint32},
+            {mcast_group6,  none},
+            {mcast_port,    huint16},
+            {ttl,           uint8}
         ]}
     ].
 
