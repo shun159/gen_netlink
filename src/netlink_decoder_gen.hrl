@@ -2510,6 +2510,88 @@ decode_ipvs_attrs(_Family, Id, Value) ->
 
 %% ============================
 
+decode_ipvs_stats64(_Family, 0, Value) ->
+    {unspec, decode_none(Value)};
+
+decode_ipvs_stats64(_Family, 1, Value) ->
+    {conns, decode_huint64(Value)};
+
+decode_ipvs_stats64(_Family, 2, Value) ->
+    {inpkts, decode_huint64(Value)};
+
+decode_ipvs_stats64(_Family, 3, Value) ->
+    {outpkts, decode_huint64(Value)};
+
+decode_ipvs_stats64(_Family, 4, Value) ->
+    {inbytes, decode_huint64(Value)};
+
+decode_ipvs_stats64(_Family, 5, Value) ->
+    {outbytes, decode_huint64(Value)};
+
+decode_ipvs_stats64(_Family, 6, Value) ->
+    {cps, decode_huint64(Value)};
+
+decode_ipvs_stats64(_Family, 7, Value) ->
+    {inpps, decode_huint64(Value)};
+
+decode_ipvs_stats64(_Family, 8, Value) ->
+    {outpps, decode_huint64(Value)};
+
+decode_ipvs_stats64(_Family, 9, Value) ->
+    {inbps, decode_huint64(Value)};
+
+decode_ipvs_stats64(_Family, 10, Value) ->
+    {outbps, decode_huint64(Value)};
+
+decode_ipvs_stats64(_Family, 11, Value) ->
+    {pad, decode_none(Value)};
+
+decode_ipvs_stats64(_Family, Id, Value) ->
+    {Id, Value}.
+
+%% ============================
+
+decode_ipvs_stats(_Family, 0, Value) ->
+    {unspec, decode_none(Value)};
+
+decode_ipvs_stats(_Family, 1, Value) ->
+    {conns, decode_huint32(Value)};
+
+decode_ipvs_stats(_Family, 2, Value) ->
+    {inpkts, decode_huint32(Value)};
+
+decode_ipvs_stats(_Family, 3, Value) ->
+    {outpkts, decode_huint32(Value)};
+
+decode_ipvs_stats(_Family, 4, Value) ->
+    {inbytes, decode_huint64(Value)};
+
+decode_ipvs_stats(_Family, 5, Value) ->
+    {outbytes, decode_huint64(Value)};
+
+decode_ipvs_stats(_Family, 6, Value) ->
+    {cps, decode_huint32(Value)};
+
+decode_ipvs_stats(_Family, 7, Value) ->
+    {inpps, decode_huint32(Value)};
+
+decode_ipvs_stats(_Family, 8, Value) ->
+    {outpps, decode_huint32(Value)};
+
+decode_ipvs_stats(_Family, 9, Value) ->
+    {inbps, decode_huint32(Value)};
+
+decode_ipvs_stats(_Family, 10, Value) ->
+    {outbps, decode_huint32(Value)};
+
+decode_ipvs_stats(_Family, 11, Value) ->
+    {pad, decode_none(Value)};
+
+decode_ipvs_stats(_Family, Id, Value) ->
+    {Id, Value}.
+
+%% ============================
+
 decode_ipvs_service_attributes(_Family, 0, Value) ->
     {unspec, decode_none(Value)};
 
@@ -2540,14 +2622,14 @@ decode_ipvs_service_attributes(_Family, 8, Value) ->
 decode_ipvs_service_attributes(_Family, 9, Value) ->
     {netmask, decode_huint32(Value)};
 
-decode_ipvs_service_attributes(_Family, 10, Value) ->
-    {stats, decode_none(Value)};
+decode_ipvs_service_attributes(Family, 10, Value) ->
+    {stats, nl_dec_nla(Family, fun decode_ipvs_stats/3, Value)};
 
 decode_ipvs_service_attributes(_Family, 11, Value) ->
     {pe_name, decode_string(Value)};
 
-decode_ipvs_service_attributes(_Family, 12, Value) ->
-    {stats64, decode_none(Value)};
+decode_ipvs_service_attributes(Family, 12, Value) ->
+    {stats64, nl_dec_nla(Family, fun decode_ipvs_stats64/3, Value)};
 
 decode_ipvs_service_attributes(_Family, Id, Value) ->
     {Id, Value}.
@@ -2584,14 +2666,14 @@ decode_ipvs_dest_attributes(_Family, 8, Value) ->
 decode_ipvs_dest_attributes(_Family, 9, Value) ->
     {persist_conns, decode_huint32(Value)};
 
-decode_ipvs_dest_attributes(_Family, 10, Value) ->
-    {stats, decode_none(Value)};
+decode_ipvs_dest_attributes(Family, 10, Value) ->
+    {stats, nl_dec_nla(Family, fun decode_ipvs_stats/3, Value)};
 
 decode_ipvs_dest_attributes(_Family, 11, Value) ->
     {addr_family, decode_huint16(Value)};
 
-decode_ipvs_dest_attributes(_Family, 12, Value) ->
-    {stats64, decode_none(Value)};
+decode_ipvs_dest_attributes(Family, 12, Value) ->
+    {stats64, nl_dec_nla(Family, fun decode_ipvs_stats64/3, Value)};
 
 decode_ipvs_dest_attributes(_Family, Id, Value) ->
     {Id, Value}.
@@ -5110,6 +5192,90 @@ encode_ipvs_attrs(_Family, {Type, Value})
 
 %% ============================
 
+encode_ipvs_stats64(_Family, {unspec, Value}) ->
+    encode_none(0, Value);
+
+encode_ipvs_stats64(_Family, {conns, Value}) ->
+    encode_huint64(1, Value);
+
+encode_ipvs_stats64(_Family, {inpkts, Value}) ->
+    encode_huint64(2, Value);
+
+encode_ipvs_stats64(_Family, {outpkts, Value}) ->
+    encode_huint64(3, Value);
+
+encode_ipvs_stats64(_Family, {inbytes, Value}) ->
+    encode_huint64(4, Value);
+
+encode_ipvs_stats64(_Family, {outbytes, Value}) ->
+    encode_huint64(5, Value);
+
+encode_ipvs_stats64(_Family, {cps, Value}) ->
+    encode_huint64(6, Value);
+
+encode_ipvs_stats64(_Family, {inpps, Value}) ->
+    encode_huint64(7, Value);
+
+encode_ipvs_stats64(_Family, {outpps, Value}) ->
+    encode_huint64(8, Value);
+
+encode_ipvs_stats64(_Family, {inbps, Value}) ->
+    encode_huint64(9, Value);
+
+encode_ipvs_stats64(_Family, {outbps, Value}) ->
+    encode_huint64(10, Value);
+
+encode_ipvs_stats64(_Family, {pad, Value}) ->
+    encode_none(11, Value);
+
+encode_ipvs_stats64(_Family, {Type, Value})
+  when is_integer(Type), is_binary(Value) ->
+    enc_nla(Type, Value).
+
+%% ============================
+
+encode_ipvs_stats(_Family, {unspec, Value}) ->
+    encode_none(0, Value);
+
+encode_ipvs_stats(_Family, {conns, Value}) ->
+    encode_huint32(1, Value);
+
+encode_ipvs_stats(_Family, {inpkts, Value}) ->
+    encode_huint32(2, Value);
+
+encode_ipvs_stats(_Family, {outpkts, Value}) ->
+    encode_huint32(3, Value);
+
+encode_ipvs_stats(_Family, {inbytes, Value}) ->
+    encode_huint64(4, Value);
+
+encode_ipvs_stats(_Family, {outbytes, Value}) ->
+    encode_huint64(5, Value);
+
+encode_ipvs_stats(_Family, {cps, Value}) ->
+    encode_huint32(6, Value);
+
+encode_ipvs_stats(_Family, {inpps, Value}) ->
+    encode_huint32(7, Value);
+
+encode_ipvs_stats(_Family, {outpps, Value}) ->
+    encode_huint32(8, Value);
+
+encode_ipvs_stats(_Family, {inbps, Value}) ->
+    encode_huint32(9, Value);
+
+encode_ipvs_stats(_Family, {outbps, Value}) ->
+    encode_huint32(10, Value);
+
+encode_ipvs_stats(_Family, {pad, Value}) ->
+    encode_none(11, Value);
+
+encode_ipvs_stats(_Family, {Type, Value})
+  when is_integer(Type), is_binary(Value) ->
+    enc_nla(Type, Value).
+
+%% ============================
+
 encode_ipvs_service_attributes(_Family, {unspec, Value}) ->
     encode_none(0, Value);
 
@@ -5141,14 +5307,14 @@ encode_ipvs_service_attributes(_Family, {timeout, Value}) ->
 encode_ipvs_service_attributes(_Family, {netmask, Value}) ->
     encode_huint32(9, Value);
 
-encode_ipvs_service_attributes(_Family, {stats, Value}) ->
-    encode_none(10, Value);
+encode_ipvs_service_attributes(Family, {stats, Value}) ->
+    enc_nla(10, nl_enc_nla(Family, fun encode_ipvs_stats/2, Value));
 
 encode_ipvs_service_attributes(_Family, {pe_name, Value}) ->
     encode_string(11, Value);
 
-encode_ipvs_service_attributes(_Family, {stats64, Value}) ->
-    encode_none(12, Value);
+encode_ipvs_service_attributes(Family, {stats64, Value}) ->
+    enc_nla(12, nl_enc_nla(Family, fun encode_ipvs_stats64/2, Value));
 
 encode_ipvs_service_attributes(_Family, {Type, Value})
   when is_integer(Type), is_binary(Value) ->
@@ -5186,14 +5352,14 @@ encode_ipvs_dest_attributes(_Family, {inact_conns, Value}) ->
 encode_ipvs_dest_attributes(_Family, {persist_conns, Value}) ->
     encode_huint32(9, Value);
 
-encode_ipvs_dest_attributes(_Family, {stats, Value}) ->
-    encode_none(10, Value);
+encode_ipvs_dest_attributes(Family, {stats, Value}) ->
+    enc_nla(10, nl_enc_nla(Family, fun encode_ipvs_stats/2, Value));
 
 encode_ipvs_dest_attributes(_Family, {addr_family, Value}) ->
     encode_huint16(11, Value);
 
-encode_ipvs_dest_attributes(_Family, {stats64, Value}) ->
-    encode_none(12, Value);
+encode_ipvs_dest_attributes(Family, {stats64, Value}) ->
+    enc_nla(12, nl_enc_nla(Family, fun encode_ipvs_stats64/2, Value));
 
 encode_ipvs_dest_attributes(_Family, {Type, Value})
   when is_integer(Type), is_binary(Value) ->
