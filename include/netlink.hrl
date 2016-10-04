@@ -1,5 +1,7 @@
 %% Copyright (c) 2010, Travelping GmbH <info@travelping.com>
 %% All rights reserved.
+-ifndef(_GEN_NETLINK_NETLINK).
+-define(_GEN_NETLINK_NETLINK, 1).
 
 %% netlink event sources
 -define(NETLINK_ROUTE, 0).
@@ -190,3 +192,5 @@
 -type rtnetlink_ev() :: {rtnetlink, [#rtnetlink{}, ...]}.
                      %% netlink event message sent to `rt' subscriber
 
+
+-endif.
