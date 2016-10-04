@@ -350,6 +350,27 @@ genl_request() ->
       16#03, 16#01, 16#00, 16#00, 16#06, 16#00, 16#01, 16#00, 16#10, 16#00, 16#00, 16#00, 16#08, 16#00, 16#02, 16#00,
       16#67, 16#74, 16#70, 16#00>>.
 
+ipvs_metrics() ->
+    <<76,1,0,0,27,0,2,0,3,0,0,0,229,56,174,198,5,1,0,0,56,1,2,0,20,0,1,0,4,2,2,2,0,
+        0,0,0,0,0,0,0,0,0,0,0,6,0,2,0,0,80,0,0,8,0,3,0,0,0,0,0,8,0,4,0,1,0,0,0,8,0,5,
+        0,0,0,0,0,8,0,6,0,0,0,0,0,8,0,7,0,0,0,0,0,8,0,8,0,0,0,0,0,8,0,9,0,0,0,0,0,6,
+        0,11,0,2,0,0,0,92,0,10,0,8,0,1,0,5,0,0,0,8,0,2,0,7,0,0,0,8,0,3,0,0,0,0,0,12,
+        0,4,0,164,1,0,0,0,0,0,0,12,0,5,0,0,0,0,0,0,0,0,0,8,0,6,0,0,0,0,0,8,0,7,0,0,0,
+        0,0,8,0,8,0,0,0,0,0,8,0,9,0,0,0,0,0,8,0,10,0,0,0,0,0,124,0,12,0,12,0,1,0,5,0,
+        0,0,0,0,0,0,12,0,2,0,7,0,0,0,0,0,0,0,12,0,3,0,0,0,0,0,0,0,0,0,12,0,4,0,164,1,
+        0,0,0,0,0,0,12,0,5,0,0,0,0,0,0,0,0,0,12,0,6,0,0,0,0,0,0,0,0,0,12,0,7,0,0,0,0,
+        0,0,0,0,0,12,0,8,0,0,0,0,0,0,0,0,0,12,0,9,0,0,0,0,0,0,0,0,0,12,0,10,0,0,0,0,
+        0,0,0,0,0,76,1,0,0,27,0,2,0,3,0,0,0,229,56,174,198,5,1,0,0,56,1,2,0,20,0,1,0,
+        216,58,192,14,0,0,0,0,0,0,0,0,0,0,0,0,6,0,2,0,0,80,0,0,8,0,3,0,0,0,0,0,8,0,4,
+        0,1,0,0,0,8,0,5,0,0,0,0,0,8,0,6,0,0,0,0,0,8,0,7,0,0,0,0,0,8,0,8,0,0,0,0,0,8,
+        0,9,0,0,0,0,0,6,0,11,0,2,0,0,0,92,0,10,0,8,0,1,0,12,0,0,0,8,0,2,0,54,0,0,0,8,
+        0,3,0,40,0,0,0,12,0,4,0,192,11,0,0,0,0,0,0,12,0,5,0,64,23,0,0,0,0,0,0,8,0,6,
+        0,0,0,0,0,8,0,7,0,0,0,0,0,8,0,8,0,0,0,0,0,8,0,9,0,0,0,0,0,8,0,10,0,0,0,0,0,
+        124,0,12,0,12,0,1,0,12,0,0,0,0,0,0,0,12,0,2,0,54,0,0,0,0,0,0,0,12,0,3,0,40,0,
+        0,0,0,0,0,0,12,0,4,0,192,11,0,0,0,0,0,0,12,0,5,0,64,23,0,0,0,0,0,0,12,0,6,0,
+        0,0,0,0,0,0,0,0,12,0,7,0,0,0,0,0,0,0,0,0,12,0,8,0,0,0,0,0,0,0,0,0,12,0,9,0,0,
+        0,0,0,0,0,0,0,12,0,10,0,0,0,0,0,0,0,0,0>>.
+
 %%--------------------------------------------------------------------
 %% @spec suite() -> Info
 %% Info = [tuple()]
@@ -360,86 +381,91 @@ suite() ->
 
 test_conntrack_new(_Config) ->
 	Msg = conntrack_new(),
-	Msg = netlink:nl_ct_enc(netlink:nl_ct_dec(Msg)),
+	Msg = netlink_codec:nl_ct_enc(netlink_codec:nl_ct_dec(Msg)),
     ok.
 
 test_rt_newneigh_1(_Config) ->
 	Msg = rt_newneigh_1(),
-	Msg = netlink:nl_rt_enc(netlink:nl_rt_dec(Msg)),
+	Msg = netlink_codec:nl_rt_enc(netlink_codec:nl_rt_dec(Msg)),
     ok.
 
 test_rt_newneigh_2(_Config) ->
 	Msg = rt_newneigh_2(),
-	Msg = netlink:nl_rt_enc(netlink:nl_rt_dec(Msg)),
+	Msg = netlink_codec:nl_rt_enc(netlink_codec:nl_rt_dec(Msg)),
     ok.
 
 test_rt_delroute(_Config) ->
 	Msg = rt_delroute(),
-	Msg = netlink:nl_rt_enc(netlink:nl_rt_dec(Msg)),
+	Msg = netlink_codec:nl_rt_enc(netlink_codec:nl_rt_dec(Msg)),
     ok.
 
 test_rt_newprefix(_Config) ->
 	Msg = rt_newprefix(),
-	Msg = netlink:nl_rt_enc(netlink:nl_rt_dec(Msg)),
+	Msg = netlink_codec:nl_rt_enc(netlink_codec:nl_rt_dec(Msg)),
     ok.
 
 test_rt_newlink_1(_Config) ->
 	Msg = rt_newlink_1(),
-	Msg = netlink:nl_rt_enc(netlink:nl_rt_dec(Msg)),
+	Msg = netlink_codec:nl_rt_enc(netlink_codec:nl_rt_dec(Msg)),
     ok.
 
 test_rt_newlink_2(_Config) ->
 	Msg = rt_newlink_2(),
-	Msg = netlink:nl_rt_enc(netlink:nl_rt_dec(Msg)),
+	Msg = netlink_codec:nl_rt_enc(netlink_codec:nl_rt_dec(Msg)),
     ok.
 
 test_rt_linkinfo_1(_Config) ->
 	Msg = rt_linkinfo_1(),
-	Msg = netlink:nl_rt_enc(netlink:nl_rt_dec(Msg)),
+	Msg = netlink_codec:nl_rt_enc(netlink_codec:nl_rt_dec(Msg)),
     ok.
 
 test_rt_linkinfo_complex(_Config) ->
 	Msg = rt_linkinfo_complex(),
-	Msg = netlink:nl_rt_enc(netlink:nl_rt_dec(Msg)),
+	Msg = netlink_codec:nl_rt_enc(netlink_codec:nl_rt_dec(Msg)),
     ok.
 
 test_nfq_unbind(_Config) ->
     Msg = nfq_unbind(),
-    Msg = netlink:nl_ct_enc(netlink:nl_ct_dec(Msg)),
+    Msg = netlink_codec:nl_ct_enc(netlink_codec:nl_ct_dec(Msg)),
     ok.
 
 test_nfq_bind_queue(_Config) ->
     Msg = nfq_bind_queue(),
-    Msg = netlink:nl_ct_enc(netlink:nl_ct_dec(Msg)),
+    Msg = netlink_codec:nl_ct_enc(netlink_codec:nl_ct_dec(Msg)),
     ok.
 
 test_nfq_bind_socket(_Config) ->
     Msg = nfq_bind_socket(),
-    Msg = netlink:nl_ct_enc(netlink:nl_ct_dec(Msg)),
+    Msg = netlink_codec:nl_ct_enc(netlink_codec:nl_ct_dec(Msg)),
     ok.
 
 test_nfq_set_copy_mode(_Config) ->
     Msg = nfq_set_copy_mode(),
-    Msg = netlink:nl_ct_enc(netlink:nl_ct_dec(Msg)),
+    Msg = netlink_codec:nl_ct_enc(netlink_codec:nl_ct_dec(Msg)),
     ok.
 
 test_nfq_set_verdict(_Config) ->
     Msg = nfq_set_verdict(),
-    Msg = netlink:nl_ct_enc(netlink:nl_ct_dec(Msg)),
+    Msg = netlink_codec:nl_ct_enc(netlink_codec:nl_ct_dec(Msg)),
     ok.
 
 test_nft_requests(_Config) ->
     lists:foreach(fun(Msg) ->
-			  D = netlink:nl_ct_dec(Msg),
+			  D = netlink_codec:nl_ct_dec(Msg),
 			  ct:pal("D: ~p", [D]),
-			  ?equal(Msg, netlink:nl_ct_enc(D))
+			  ?equal(Msg, netlink_codec:nl_ct_enc(D))
 		  end, nft_requests()),
     ok.
 
 test_genl(_Config) ->
     Msg = genl_request(),
-    Msg = netlink:nl_enc(?NETLINK_GENERIC, netlink:nl_dec(?NETLINK_GENERIC, Msg)),
+    Msg = netlink_codec:nl_enc(?NETLINK_GENERIC, netlink_codec:nl_dec(?NETLINK_GENERIC, Msg)),
     ok.
+
+test_ipvs(_Config) ->
+    Msg = ipvs_metrics(),
+    %% 27 was the original IPVS generic netlink family used to encode this message
+    Msg =  netlink_codec:nl_enc(27, netlink_codec:nl_dec(ipvs, Msg)).
 
 all() ->
 	[test_conntrack_new,

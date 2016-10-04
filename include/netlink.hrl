@@ -1,5 +1,7 @@
 %% Copyright (c) 2010, Travelping GmbH <info@travelping.com>
 %% All rights reserved.
+-ifndef(_GEN_NETLINK_NETLINK).
+-define(_GEN_NETLINK_NETLINK, 1).
 
 %% netlink event sources
 -define(NETLINK_ROUTE, 0).
@@ -191,7 +193,6 @@
                      %% netlink event message sent to `rt' subscriber
 
 
-
 %-define(LOG(Formatting, Args), lager:debug(Formatting, Args)).
 -define(LOG(Formatting, Args), ok).
 
@@ -199,3 +200,4 @@
 -define(LOG(Formatting), ok).
 
 -define(getfamily, {version = 1, reserved = 0, request}).
+-endif.
