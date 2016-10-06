@@ -360,85 +360,85 @@ suite() ->
 
 test_conntrack_new(_Config) ->
 	Msg = conntrack_new(),
-	Msg = netlink_codec:nl_ct_enc(netlink_codec:nl_ct_dec(Msg)),
+	Msg = netlink:nl_ct_enc(netlink:nl_ct_dec(Msg)),
     ok.
 
 test_rt_newneigh_1(_Config) ->
 	Msg = rt_newneigh_1(),
-	Msg = netlink_codec:nl_rt_enc(netlink_codec:nl_rt_dec(Msg)),
+	Msg = netlink:nl_rt_enc(netlink:nl_rt_dec(Msg)),
     ok.
 
 test_rt_newneigh_2(_Config) ->
 	Msg = rt_newneigh_2(),
-	Msg = netlink_codec:nl_rt_enc(netlink_codec:nl_rt_dec(Msg)),
+	Msg = netlink:nl_rt_enc(netlink:nl_rt_dec(Msg)),
     ok.
 
 test_rt_delroute(_Config) ->
 	Msg = rt_delroute(),
-	Msg = netlink_codec:nl_rt_enc(netlink_codec:nl_rt_dec(Msg)),
+	Msg = netlink:nl_rt_enc(netlink:nl_rt_dec(Msg)),
     ok.
 
 test_rt_newprefix(_Config) ->
 	Msg = rt_newprefix(),
-	Msg = netlink_codec:nl_rt_enc(netlink_codec:nl_rt_dec(Msg)),
+	Msg = netlink:nl_rt_enc(netlink:nl_rt_dec(Msg)),
     ok.
 
 test_rt_newlink_1(_Config) ->
 	Msg = rt_newlink_1(),
-	Msg = netlink_codec:nl_rt_enc(netlink_codec:nl_rt_dec(Msg)),
+	Msg = netlink:nl_rt_enc(netlink:nl_rt_dec(Msg)),
     ok.
 
 test_rt_newlink_2(_Config) ->
 	Msg = rt_newlink_2(),
-	Msg = netlink_codec:nl_rt_enc(netlink_codec:nl_rt_dec(Msg)),
+	Msg = netlink:nl_rt_enc(netlink:nl_rt_dec(Msg)),
     ok.
 
 test_rt_linkinfo_1(_Config) ->
 	Msg = rt_linkinfo_1(),
-	Msg = netlink_codec:nl_rt_enc(netlink_codec:nl_rt_dec(Msg)),
+	Msg = netlink:nl_rt_enc(netlink:nl_rt_dec(Msg)),
     ok.
 
 test_rt_linkinfo_complex(_Config) ->
 	Msg = rt_linkinfo_complex(),
-	Msg = netlink_codec:nl_rt_enc(netlink_codec:nl_rt_dec(Msg)),
+	Msg = netlink:nl_rt_enc(netlink:nl_rt_dec(Msg)),
     ok.
 
 test_nfq_unbind(_Config) ->
     Msg = nfq_unbind(),
-    Msg = netlink_codec:nl_ct_enc(netlink_codec:nl_ct_dec(Msg)),
+    Msg = netlink:nl_ct_enc(netlink:nl_ct_dec(Msg)),
     ok.
 
 test_nfq_bind_queue(_Config) ->
     Msg = nfq_bind_queue(),
-    Msg = netlink_codec:nl_ct_enc(netlink_codec:nl_ct_dec(Msg)),
+    Msg = netlink:nl_ct_enc(netlink:nl_ct_dec(Msg)),
     ok.
 
 test_nfq_bind_socket(_Config) ->
     Msg = nfq_bind_socket(),
-    Msg = netlink_codec:nl_ct_enc(netlink_codec:nl_ct_dec(Msg)),
+    Msg = netlink:nl_ct_enc(netlink:nl_ct_dec(Msg)),
     ok.
 
 test_nfq_set_copy_mode(_Config) ->
     Msg = nfq_set_copy_mode(),
-    Msg = netlink_codec:nl_ct_enc(netlink_codec:nl_ct_dec(Msg)),
+    Msg = netlink:nl_ct_enc(netlink:nl_ct_dec(Msg)),
     ok.
 
 test_nfq_set_verdict(_Config) ->
     Msg = nfq_set_verdict(),
-    Msg = netlink_codec:nl_ct_enc(netlink_codec:nl_ct_dec(Msg)),
+    Msg = netlink:nl_ct_enc(netlink:nl_ct_dec(Msg)),
     ok.
 
 test_nft_requests(_Config) ->
     lists:foreach(fun(Msg) ->
-			  D = netlink_codec:nl_ct_dec(Msg),
+			  D = netlink:nl_ct_dec(Msg),
 			  ct:pal("D: ~p", [D]),
-			  ?equal(Msg, netlink_codec:nl_ct_enc(D))
+			  ?equal(Msg, netlink:nl_ct_enc(D))
 		  end, nft_requests()),
     ok.
 
 test_genl(_Config) ->
     Msg = genl_request(),
-    Msg = netlink_codec:nl_enc(?NETLINK_GENERIC, netlink_codec:nl_dec(?NETLINK_GENERIC, Msg)),
+    Msg = netlink:nl_enc(?NETLINK_GENERIC, netlink:nl_dec(?NETLINK_GENERIC, Msg)),
     ok.
 
 all() ->
