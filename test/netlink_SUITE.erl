@@ -351,7 +351,8 @@ genl_request() ->
       16#67, 16#74, 16#70, 16#00>>.
 
 ipvs_metrics() ->
-    <<76,1,0,0,27,0,2,0,3,0,0,0,229,56,174,198,5,1,0,0,56,1,2,0,20,0,1,0,4,2,2,2,0,
+    {
+        <<76,1,0,0,27,0,2,0,3,0,0,0,229,56,174,198,5,1,0,0,56,1,2,0,20,0,1,0,4,2,2,2,0,
         0,0,0,0,0,0,0,0,0,0,0,6,0,2,0,0,80,0,0,8,0,3,0,0,0,0,0,8,0,4,0,1,0,0,0,8,0,5,
         0,0,0,0,0,8,0,6,0,0,0,0,0,8,0,7,0,0,0,0,0,8,0,8,0,0,0,0,0,8,0,9,0,0,0,0,0,6,
         0,11,0,2,0,0,0,92,0,10,0,8,0,1,0,5,0,0,0,8,0,2,0,7,0,0,0,8,0,3,0,0,0,0,0,12,
@@ -369,7 +370,77 @@ ipvs_metrics() ->
         124,0,12,0,12,0,1,0,12,0,0,0,0,0,0,0,12,0,2,0,54,0,0,0,0,0,0,0,12,0,3,0,40,0,
         0,0,0,0,0,0,12,0,4,0,192,11,0,0,0,0,0,0,12,0,5,0,64,23,0,0,0,0,0,0,12,0,6,0,
         0,0,0,0,0,0,0,0,12,0,7,0,0,0,0,0,0,0,0,0,12,0,8,0,0,0,0,0,0,0,0,0,12,0,9,0,0,
-        0,0,0,0,0,0,0,12,0,10,0,0,0,0,0,0,0,0,0>>.
+        0,0,0,0,0,0,0,12,0,10,0,0,0,0,0,0,0,0,0>>,
+        [{netlink,ipvs,
+            [multi],
+            3,3333306597,
+            {new_dest,1,0,
+                [{dest,[{address,<<4,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0>>},
+                    {port,80},
+                    {fwd_method,0},
+                    {weight,1},
+                    {u_threshold,0},
+                    {l_threshold,0},
+                    {active_conns,0},
+                    {inact_conns,0},
+                    {persist_conns,0},
+                    {addr_family,2},
+                    {stats,[{conns,5},
+                        {inpkts,7},
+                        {outpkts,0},
+                        {inbytes,420},
+                        {outbytes,0},
+                        {cps,0},
+                        {inpps,0},
+                        {outpps,0},
+                        {inbps,0},
+                        {outbps,0}]},
+                    {stats64,[{conns,5},
+                        {inpkts,7},
+                        {outpkts,0},
+                        {inbytes,420},
+                        {outbytes,0},
+                        {cps,0},
+                        {inpps,0},
+                        {outpps,0},
+                        {inbps,0},
+                        {outbps,0}]}]}]}},
+            {netlink,ipvs,
+                [multi],
+                3,3333306597,
+                {new_dest,1,0,
+                    [{dest,[{address,<<216,58,192,14,0,0,0,0,0,0,0,0,0,0,0,0>>},
+                        {port,80},
+                        {fwd_method,0},
+                        {weight,1},
+                        {u_threshold,0},
+                        {l_threshold,0},
+                        {active_conns,0},
+                        {inact_conns,0},
+                        {persist_conns,0},
+                        {addr_family,2},
+                        {stats,[{conns,12},
+                            {inpkts,54},
+                            {outpkts,40},
+                            {inbytes,3008},
+                            {outbytes,5952},
+                            {cps,0},
+                            {inpps,0},
+                            {outpps,0},
+                            {inbps,0},
+                            {outbps,0}]},
+                        {stats64,[{conns,12},
+                            {inpkts,54},
+                            {outpkts,40},
+                            {inbytes,3008},
+                            {outbytes,5952},
+                            {cps,0},
+                            {inpps,0},
+                            {outpps,0},
+                            {inbps,0},
+                            {outbps,0}]}]}]}}]
+    }.
+
 
 %%--------------------------------------------------------------------
 %% @spec suite() -> Info
@@ -463,9 +534,10 @@ test_genl(_Config) ->
     ok.
 
 test_ipvs(_Config) ->
-    Msg = ipvs_metrics(),
+    {EncodedMsg, DecodedMsg} = ipvs_metrics(),
+    DecodedMsg = netlink_codec:nl_dec(ipvs, EncodedMsg),
     %% 27 was the original IPVS generic netlink family used to encode this message
-    Msg =  netlink_codec:nl_enc(27, netlink_codec:nl_dec(ipvs, Msg)).
+    EncodedMsg =  netlink_codec:nl_enc(27, DecodedMsg).
 
 all() ->
 	[test_conntrack_new,
@@ -477,7 +549,7 @@ all() ->
 	 test_nfq_bind_socket, test_nfq_set_copy_mode,
 	 test_nfq_set_verdict,
 	 test_nft_requests,
-	 test_genl
+	 test_genl, test_ipvs
 	].
 
 init_per_suite(Config) ->
