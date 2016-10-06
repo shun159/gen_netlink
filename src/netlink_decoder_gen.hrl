@@ -553,13 +553,13 @@ decode_ctnetlink(_Family, Id, Value) ->
 %% ============================
 
 decode_ctnetlink_snat_entry(_Family, 0, Value) ->
-    {unspec1, decode_none(Value)};
+    {unspec, decode_none(Value)};
 
 decode_ctnetlink_snat_entry(_Family, 1, Value) ->
     {v4_src, decode_addr(Value)};
 
 decode_ctnetlink_snat_entry(_Family, 2, Value) ->
-    {unspec2, decode_none(Value)};
+    {unspec, decode_none(Value)};
 
 decode_ctnetlink_snat_entry(Family, 3, Value) ->
     {src_port, nl_dec_nla(Family, fun decode_ctnetlink_snat_entry_ports/3, Value)};
@@ -584,13 +584,13 @@ decode_ctnetlink_snat_entry_ports(_Family, Id, Value) ->
 %% ============================
 
 decode_ctnetlink_dnat_entry(_Family, 0, Value) ->
-    {unspec1, decode_none(Value)};
+    {unspec, decode_none(Value)};
 
 decode_ctnetlink_dnat_entry(_Family, 1, Value) ->
     {v4_dst, decode_addr(Value)};
 
 decode_ctnetlink_dnat_entry(_Family, 2, Value) ->
-    {unspec2, decode_none(Value)};
+    {unspec, decode_none(Value)};
 
 decode_ctnetlink_dnat_entry(Family, 3, Value) ->
     {dst_port, nl_dec_nla(Family, fun decode_ctnetlink_dnat_entry_ports/3, Value)};
@@ -2903,13 +2903,13 @@ encode_ctnetlink(_Family, {Type, Value})
 
 %% ============================
 
-encode_ctnetlink_snat_entry(_Family, {unspec1, Value}) ->
+encode_ctnetlink_snat_entry(_Family, {unspec, Value}) ->
     encode_none(0, Value);
 
 encode_ctnetlink_snat_entry(_Family, {v4_src, Value}) ->
     encode_addr(1, Value);
 
-encode_ctnetlink_snat_entry(_Family, {unspec2, Value}) ->
+encode_ctnetlink_snat_entry(_Family, {unspec, Value}) ->
     encode_none(2, Value);
 
 encode_ctnetlink_snat_entry(Family, {src_port, Value}) ->
@@ -2936,13 +2936,13 @@ encode_ctnetlink_snat_entry_ports(_Family, {Type, Value})
 
 %% ============================
 
-encode_ctnetlink_dnat_entry(_Family, {unspec1, Value}) ->
+encode_ctnetlink_dnat_entry(_Family, {unspec, Value}) ->
     encode_none(0, Value);
 
 encode_ctnetlink_dnat_entry(_Family, {v4_dst, Value}) ->
     encode_addr(1, Value);
 
-encode_ctnetlink_dnat_entry(_Family, {unspec2, Value}) ->
+encode_ctnetlink_dnat_entry(_Family, {unspec, Value}) ->
     encode_none(2, Value);
 
 encode_ctnetlink_dnat_entry(Family, {dst_port, Value}) ->

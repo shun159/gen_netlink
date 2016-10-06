@@ -208,9 +208,9 @@ define_consts() ->
                     {labels_mask, binary}
                  ]},
      {{ctnetlink, snat_entry}, [
-                                {unspec1, none},
+                                {unspec, none},
                                 {v4_src, addr},
-                                {unspec2, none},
+                                {unspec, none},
                                 {src_port, ports}
                                ]},
      {{ctnetlink, snat_entry, ports}, [
@@ -219,9 +219,9 @@ define_consts() ->
                                        {max_port, uint16}
                                       ]},
      {{ctnetlink, dnat_entry}, [
-                                {unspec1, none},
+                                {unspec, none},
                                 {v4_dst, addr},
-                                {unspec2, none},
+                                {unspec, none},
                                 {dst_port, ports}
                                ]},
      {{ctnetlink, dnat_entry, ports}, [
