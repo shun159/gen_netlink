@@ -10,13 +10,12 @@ dependencies:
     - .cache
     - ~/.cache
   pre:
-    - sudo service mongodb stop
-    - sudo service rabbitmq-server stop
-    - sudo service couchdb stop
-    - sudo service zookeeper stop
-    - sudo service mysql stop
-    - sudo service postgresql stop
-    - sudo service redis-server stop
+    - sudo apt-get update
+    - sudo apt-get install -y libzookeeper-mt-dev libzookeeper-mt2 zookeeper zookeeper-bin zookeeperd splint-data splint software-properties-common clang libssl-dev
+    - sudo add-apt-repository -y ppa:george-edison55/cmake-3.x
+    - sudo apt-get update
+    - sudo apt-get install cmake
+    - echo 'JAVA_OPTS="-Xms512m -Xmx2048m"' | sudo tee /etc/default/zookeeper
     - curl -O -L https://raw.githubusercontent.com/yrashk/kerl/master/kerl && chmod 755 kerl
     - if [ ! -d ~/extras/otp/19.0 ]; then ./kerl build 19.0 19.0; ./kerl install 19.0 ~/extras/otp/19.0; fi:
         timeout: 1800
