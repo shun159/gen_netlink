@@ -26,7 +26,6 @@ test:
   override:
     - make check
     - sudo bash -c 'source ~/extras/otp/19.0/activate && make check'
-    - ./elvis rock
   post:
     - git clone https://github.com/idubrov/covertool
     - cd covertool && ../rebar3 compile
