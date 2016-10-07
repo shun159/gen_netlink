@@ -9,8 +9,6 @@
     linkinfo_enc/3, linkinfo_dec/3,
     rtnl_wilddump/2]).
 
--export([sockaddr_nl/3]).
-
 -export([nft_decode/2, nft_encode/2]).
 
 -endif.
@@ -290,18 +288,6 @@ encode_nl_msg(_Protocol, nft_compat, Type) ->
     encode_nl_msgtype_nft_compat(Type);
 encode_nl_msg(_Protocol, queue, Type) ->
     encode_nl_msgtype_queue(Type).
-
-sockaddr_nl(Family, Pid, Groups) ->
-    sockaddr_nl({Family, Pid, Groups}).
-
--spec sockaddr_nl({atom()|integer(),integer(),integer()}) -> binary();
-    (binary())                               -> {atom()|integer(),integer(),integer()}.
-sockaddr_nl({Family, Pid, Groups}) when is_atom(Family) ->
-    sockaddr_nl({family(Family), Pid, Groups});
-sockaddr_nl({Family, Pid, Groups}) ->
-    << Family:16/native-integer, 0:16, Pid:32/native-integer, Groups:32/native-integer >>;
-sockaddr_nl(<< Family:16/native-integer, _Pad:16, Pid:32/native-integer, Groups:32/native-integer >>) ->
-    {family(Family), Pid, Groups}.
 
 encode_flag(_Type, [], Value) ->
     Value;
@@ -743,13 +729,13 @@ nl_dec_payload(_SubSys, _MsgType, Data) ->
 nlmsg_ok(DataLen, MsgLen) ->
     (DataLen >= 16) andalso (MsgLen >= 16) andalso (MsgLen =< DataLen).
 
--spec nl_dec(genl_family(), binary()) -> [{'error',_} | #ctnetlink{} | #ctnetlink_exp{}].
+-spec nl_dec(genl_family(), binary()) -> [{'error',_} | #ctnetlink{} | #ctnetlink_exp{} | #rtnetlink{}].
 nl_dec(?NETLINK_ROUTE, Msg) ->
     nl_rt_dec(?NETLINK_ROUTE, Msg, []);
 nl_dec(Protocol, Msg) ->
     nl_ct_dec(Protocol, Msg, []).
 
--spec nl_ct_dec(binary()) -> [{'error',_} | #ctnetlink{} | #ctnetlink_exp{}].
+-spec nl_ct_dec(binary()) -> [{'error',_} | #ctnetlink{} | #ctnetlink_exp{} | #rtnetlink{}].
 nl_ct_dec(Msg) ->
     nl_ct_dec(?NETLINK_NETFILTER, Msg, []).
 

@@ -178,6 +178,17 @@ rcvbufsiz(Socket, BufSiz) ->
 	_ -> gen_socket:setsockopt(Socket, sol_socket, rcvbuf, BufSiz)
     end.
 
+sockaddr_nl(Family, Pid, Groups) ->
+    sockaddr_nl({Family, Pid, Groups}).
+
+-spec sockaddr_nl({atom()|integer(),integer(),integer()}) -> binary();
+    (binary())                               -> {atom()|integer(),integer(),integer()}.
+sockaddr_nl({Family, Pid, Groups}) when is_atom(Family) ->
+    sockaddr_nl({family(Family), Pid, Groups});
+sockaddr_nl({Family, Pid, Groups}) ->
+    << Family:16/native-integer, 0:16, Pid:32/native-integer, Groups:32/native-integer >>;
+sockaddr_nl(<< Family:16/native-integer, _Pad:16, Pid:32/native-integer, Groups:32/native-integer >>) ->
+    {family(Family), Pid, Groups}.
 
 %%
 %% API implementation
