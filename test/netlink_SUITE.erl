@@ -553,7 +553,6 @@ all() ->
 	].
 
 init_per_suite(Config) ->
-	R = netlink:start(),
 	Config.
 
 end_per_suite(_Config) ->

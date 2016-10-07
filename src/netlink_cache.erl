@@ -268,7 +268,7 @@ handle_rtnetlink2(#rtnetlink{type = delroute, msg = {_Family, DstLen, _SrcLen, _
     ets:delete(State#state.route_table, Key),
     State;
 
-handle_rtnetlink2(Info, State) ->
+handle_rtnetlink2(_Info, State) ->
     State.
 
 

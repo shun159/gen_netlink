@@ -111,101 +111,6 @@
 -define(RTNLGRP_PHONET_IFADDR, 20).
 -define(RTNLGRP_PHONET_ROUTE, 21).
 
-%%
-%% grep define src/netlink.erl | awk -F"[(,]" '{ printf "enc_opt(%s)%*s ?%s;\n", tolower($2), 32 - length($2), "->", $2 }'
-%%
-enc_opt(netlink_route)                 -> ?NETLINK_ROUTE;
-enc_opt(netlink_unused)                -> ?NETLINK_UNUSED;
-enc_opt(netlink_usersock)              -> ?NETLINK_USERSOCK;
-enc_opt(netlink_firewall)              -> ?NETLINK_FIREWALL;
-enc_opt(netlink_inet_diag)             -> ?NETLINK_INET_DIAG;
-enc_opt(netlink_nflog)                 -> ?NETLINK_NFLOG;
-enc_opt(netlink_xfrm)                  -> ?NETLINK_XFRM;
-enc_opt(netlink_selinux)               -> ?NETLINK_SELINUX;
-enc_opt(netlink_iscsi)                 -> ?NETLINK_ISCSI;
-enc_opt(netlink_audit)                 -> ?NETLINK_AUDIT;
-enc_opt(netlink_fib_lookup)            -> ?NETLINK_FIB_LOOKUP;
-enc_opt(netlink_connector)             -> ?NETLINK_CONNECTOR;
-enc_opt(netlink_netfilter)             -> ?NETLINK_NETFILTER;
-enc_opt(netlink_ip6_fw)                -> ?NETLINK_IP6_FW;
-enc_opt(netlink_dnrtmsg)               -> ?NETLINK_DNRTMSG;
-enc_opt(netlink_kobject_uevent)        -> ?NETLINK_KOBJECT_UEVENT;
-enc_opt(netlink_generic)               -> ?NETLINK_GENERIC;
-enc_opt(netlink_scsitransport)         -> ?NETLINK_SCSITRANSPORT;
-enc_opt(netlink_ecryptfs)              -> ?NETLINK_ECRYPTFS;
-enc_opt(netlink_add_membership)        -> ?NETLINK_ADD_MEMBERSHIP;
-enc_opt(netlink_drop_membership)       -> ?NETLINK_DROP_MEMBERSHIP;
-enc_opt(netlink_pktinfo)               -> ?NETLINK_PKTINFO;
-enc_opt(netlink_broadcast_error)       -> ?NETLINK_BROADCAST_ERROR;
-enc_opt(netlink_no_enobufs)            -> ?NETLINK_NO_ENOBUFS;
-enc_opt(sol_netlink)                   -> ?SOL_NETLINK;
-enc_opt(nfnlgrp_none)                  -> ?NFNLGRP_NONE;
-enc_opt(nfnlgrp_conntrack_new)         -> ?NFNLGRP_CONNTRACK_NEW;
-enc_opt(nfnlgrp_conntrack_update)      -> ?NFNLGRP_CONNTRACK_UPDATE;
-enc_opt(nfnlgrp_conntrack_destroy)     -> ?NFNLGRP_CONNTRACK_DESTROY;
-enc_opt(nfnlgrp_conntrack_exp_new)     -> ?NFNLGRP_CONNTRACK_EXP_NEW;
-enc_opt(nfnlgrp_conntrack_exp_update)  -> ?NFNLGRP_CONNTRACK_EXP_UPDATE;
-enc_opt(nfnlgrp_conntrack_exp_destroy) -> ?NFNLGRP_CONNTRACK_EXP_DESTROY;
-enc_opt(rtnlgrp_none)                  -> ?RTNLGRP_NONE;
-enc_opt(rtnlgrp_link)                  -> ?RTNLGRP_LINK;
-enc_opt(rtnlgrp_notify)                -> ?RTNLGRP_NOTIFY;
-enc_opt(rtnlgrp_neigh)                 -> ?RTNLGRP_NEIGH;
-enc_opt(rtnlgrp_tc)                    -> ?RTNLGRP_TC;
-enc_opt(rtnlgrp_ipv4_ifaddr)           -> ?RTNLGRP_IPV4_IFADDR;
-enc_opt(rtnlgrp_ipv4_mroute)           -> ?RTNLGRP_IPV4_MROUTE;
-enc_opt(rtnlgrp_ipv4_route)            -> ?RTNLGRP_IPV4_ROUTE;
-enc_opt(rtnlgrp_ipv4_rule)             -> ?RTNLGRP_IPV4_RULE;
-enc_opt(rtnlgrp_ipv6_ifaddr)           -> ?RTNLGRP_IPV6_IFADDR;
-enc_opt(rtnlgrp_ipv6_mroute)           -> ?RTNLGRP_IPV6_MROUTE;
-enc_opt(rtnlgrp_ipv6_route)            -> ?RTNLGRP_IPV6_ROUTE;
-enc_opt(rtnlgrp_ipv6_ifinfo)           -> ?RTNLGRP_IPV6_IFINFO;
-enc_opt(rtnlgrp_decnet_ifaddr)         -> ?RTNLGRP_DECnet_IFADDR;
-enc_opt(rtnlgrp_nop2)                  -> ?RTNLGRP_NOP2;
-enc_opt(rtnlgrp_decnet_route)          -> ?RTNLGRP_DECnet_ROUTE;
-enc_opt(rtnlgrp_decnet_rule)           -> ?RTNLGRP_DECnet_RULE;
-enc_opt(rtnlgrp_nop4)                  -> ?RTNLGRP_NOP4;
-enc_opt(rtnlgrp_ipv6_prefix)           -> ?RTNLGRP_IPV6_PREFIX;
-enc_opt(rtnlgrp_ipv6_rule)             -> ?RTNLGRP_IPV6_RULE;
-enc_opt(rtnlgrp_nd_useropt)            -> ?RTNLGRP_ND_USEROPT;
-enc_opt(rtnlgrp_phonet_ifaddr)         -> ?RTNLGRP_PHONET_IFADDR;
-enc_opt(rtnlgrp_phonet_route)          -> ?RTNLGRP_PHONET_ROUTE.
-
-%%
-%% grep define src/netlink.erl | awk -F"[(,]" '{ printf "dec_opt(?%s)%*s %s;\n", $2, 32 - length($2), "->", tolower($2) }'
-%%
-%% dec_opt(?NETLINK_ROUTE)                 -> netlink_route;
-%% dec_opt(?NETLINK_UNUSED)                -> netlink_unused;
-%% dec_opt(?NETLINK_USERSOCK)              -> netlink_usersock;
-%% dec_opt(?NETLINK_FIREWALL)              -> netlink_firewall;
-%% dec_opt(?NETLINK_INET_DIAG)             -> netlink_inet_diag;
-%% dec_opt(?NETLINK_NFLOG)                 -> netlink_nflog;
-%% dec_opt(?NETLINK_XFRM)                  -> netlink_xfrm;
-%% dec_opt(?NETLINK_SELINUX)               -> netlink_selinux;
-%% dec_opt(?NETLINK_ISCSI)                 -> netlink_iscsi;
-%% dec_opt(?NETLINK_AUDIT)                 -> netlink_audit;
-%% dec_opt(?NETLINK_FIB_LOOKUP)            -> netlink_fib_lookup;
-%% dec_opt(?NETLINK_CONNECTOR)             -> netlink_connector;
-%% dec_opt(?NETLINK_NETFILTER)             -> netlink_netfilter;
-%% dec_opt(?NETLINK_IP6_FW)                -> netlink_ip6_fw;
-%% dec_opt(?NETLINK_DNRTMSG)               -> netlink_dnrtmsg;
-%% dec_opt(?NETLINK_KOBJECT_UEVENT)        -> netlink_kobject_uevent;
-%% dec_opt(?NETLINK_GENERIC)               -> netlink_generic;
-%% dec_opt(?NETLINK_SCSITRANSPORT)         -> netlink_scsitransport;
-%% dec_opt(?NETLINK_ECRYPTFS)              -> netlink_ecryptfs;
-%% dec_opt(?NETLINK_ADD_MEMBERSHIP)        -> netlink_add_membership;
-%% dec_opt(?NETLINK_DROP_MEMBERSHIP)       -> netlink_drop_membership;
-%% dec_opt(?NETLINK_PKTINFO)               -> netlink_pktinfo;
-%% dec_opt(?NETLINK_BROADCAST_ERROR)       -> netlink_broadcast_error;
-%% dec_opt(?NETLINK_NO_ENOBUFS)            -> netlink_no_enobufs;
-%% dec_opt(?SOL_NETLINK)                   -> sol_netlink;
-%% dec_opt(?NFNLGRP_NONE)                  -> nfnlgrp_none;
-%% dec_opt(?NFNLGRP_CONNTRACK_NEW)         -> nfnlgrp_conntrack_new;
-%% dec_opt(?NFNLGRP_CONNTRACK_UPDATE)      -> nfnlgrp_conntrack_update;
-%% dec_opt(?NFNLGRP_CONNTRACK_DESTROY)     -> nfnlgrp_conntrack_destroy;
-%% dec_opt(?NFNLGRP_CONNTRACK_EXP_NEW)     -> nfnlgrp_conntrack_exp_new;
-%% dec_opt(?NFNLGRP_CONNTRACK_EXP_UPDATE)  -> nfnlgrp_conntrack_exp_update;
-%% dec_opt(?NFNLGRP_CONNTRACK_EXP_DESTROY) -> nfnlgrp_conntrack_exp_destroy.
-
 -define(NLMSG_NOOP, 1).
 -define(NLMSG_ERROR, 2).
 -define(NLMSG_DONE, 3).
@@ -575,7 +480,7 @@ decode_addr(<<A:16, B:16, C:16, D:16, E:16, F:16, G:16, H:16>>) ->
 
 decode_if_map(Attr, << MemStart:64/native-integer, MemEnd:64/native-integer,
     BaseAddr:64/native-integer, Irq:16/native-integer,
-    Dma:8, Port:8, _Pad/binary >> = D) ->
+    Dma:8, Port:8, _Pad/binary >>) ->
     %% WARNING: THIS might be broken, compiler specific aligment must be take into consideration
     {Attr, MemStart, MemEnd, BaseAddr, Irq, Dma, Port}.
 
@@ -739,12 +644,12 @@ nl_enc_payload(queue, MsgType, {Family, Version, ResId, Req}) ->
     Data = nl_enc_nla(Family, Fun, Req),
     << Fam:8, Version:8, ResId:16/native-integer, Data/binary >>;
 
-nl_enc_payload({netlink, generic}, MsgType, {CtrlCmd, Version, ResId, Req}) ->
+nl_enc_payload({netlink, generic}, _MsgType, {CtrlCmd, Version, ResId, Req}) ->
     Cmd = encode_genl_ctrl_cmd(CtrlCmd),
     Data = nl_enc_nla(CtrlCmd, fun encode_genl_ctrl_attr/2, Req),
     << Cmd:8, Version:8, ResId:16/native-integer, Data/binary >>;
 
-nl_enc_payload({netlink, GenlType}, gtp, {GtpCmd, Version, ResId, Req}) ->
+nl_enc_payload({netlink, _GenlType}, gtp, {GtpCmd, Version, ResId, Req}) ->
     Cmd = encode_gtp_cmd(GtpCmd),
     Data = nl_enc_nla(GtpCmd, fun encode_gtp_attrs/2, Req),
     << Cmd:8, Version:8, ResId:16/native-integer, Data/binary >>;
@@ -818,7 +723,7 @@ nl_dec_payload(queue, MsgType, << Family:8, Version:8, ResId:16/native-integer, 
           end,
     { Fam, Version, ResId, nl_dec_nla(Fam, Fun, Data) };
 
-nl_dec_payload({netlink, generic}, MsgType, << Cmd:8, Version:8, ResId:16/native-integer, Data/binary >>) ->
+nl_dec_payload({netlink, generic}, _MsgType, << Cmd:8, Version:8, ResId:16/native-integer, Data/binary >>) ->
     CtrlCmd = decode_genl_ctrl_cmd(Cmd),
     { CtrlCmd, Version, ResId, nl_dec_nla(CtrlCmd, fun decode_genl_ctrl_attr/3, Data) };
 
@@ -894,7 +799,7 @@ nl_rt_dec(Protocol, << Len:32/native-integer, Type:16/native-integer, Flags:16/n
                                      pid   = Pid},
                                  case is_rt_dump(Type, Flags) of
                                      true ->
-                                         <<IfiFam:8, _Pad:8, IfiType:16/native-integer, IfiIndex:32/native-integer, IfiFlags:32/native-integer, IfiChange:32/native-integer, Filter/binary >> = PayLoad,
+                                         <<IfiFam:8, _Pad:8, _IfiType:16/native-integer, IfiIndex:32/native-integer, IfiFlags:32/native-integer, IfiChange:32/native-integer, Filter/binary >> = PayLoad,
                                          InfoMsg = #ifinfomsg{family = family(IfiFam),
                                              type = Type,
                                              index = IfiIndex,

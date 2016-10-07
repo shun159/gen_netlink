@@ -194,10 +194,10 @@
 
 
 %-define(LOG(Formatting, Args), lager:debug(Formatting, Args)).
--define(LOG(Formatting, Args), ok).
+-define(LOG(Formatting, Args), begin _ = Formatting, _ = Args end).
 
 %-define(LOG(Formatting), lager:debug(Formatting)).
--define(LOG(Formatting), ok).
+-define(LOG(Formatting), begin _ = Formatting end).
 
 -define(getfamily, {version = 1, reserved = 0, request}).
 -endif.
