@@ -1008,7 +1008,8 @@ define_consts() ->
             {mcast_group6, none},
             {mcast_port, huint16},
             {ttl, uint8}
-        ]}
+        ]},
+        {{tcp_metrics, cmd}, [unspec, get]}
     ].
 
 make_prefix(Id) when is_atom(Id) ->

@@ -2709,6 +2709,17 @@ decode_ipvs_daemon_attributes(_Family, Id, Value) ->
 
 %% ============================
 
+decode_tcp_metrics_cmd(0) ->
+    unspec;
+
+decode_tcp_metrics_cmd(1) ->
+    get;
+
+decode_tcp_metrics_cmd(Value) ->
+    Value.
+
+%% ============================
+
 encode_protocol_subsys(rtnetlink) ->
     ?NETLINK_ROUTE;
 
@@ -5394,3 +5405,14 @@ encode_ipvs_daemon_attributes(_Family, {ttl, Value}) ->
 encode_ipvs_daemon_attributes(_Family, {Type, Value})
   when is_integer(Type), is_binary(Value) ->
     enc_nla(Type, Value).
+
+%% ============================
+
+encode_tcp_metrics_cmd(unspec) ->
+    0;
+
+encode_tcp_metrics_cmd(get) ->
+    1;
+
+encode_tcp_metrics_cmd(Value) when is_integer(Value) ->
+    Value.
