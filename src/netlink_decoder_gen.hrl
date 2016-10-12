@@ -2720,7 +2720,6 @@ decode_tcp_metrics_cmd(Value) ->
 
 %% ============================
 
-<<<<<<< 1f479eec176ed93249ed741efb785726038a5b3a
 decode_tcp_metrics_attrs(_Family, 0, Value) ->
     {unspec, decode_none(Value)};
 
@@ -2729,8 +2728,6 @@ decode_tcp_metrics_attrs(_Family, Id, Value) ->
 
 %% ============================
 
-=======
->>>>>>> get cmd
 encode_protocol_subsys(rtnetlink) ->
     ?NETLINK_ROUTE;
 
@@ -5437,3 +5434,4 @@ encode_tcp_metrics_attrs(_Family, {Type, Value})
   when is_integer(Type), is_binary(Value) ->
     enc_nla(Type, Value).
     Value.
+    enc_nla(Type, Value).
