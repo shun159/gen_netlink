@@ -557,12 +557,12 @@ test_tcp_metrics_get_rsp_dec(_Config) ->
     ct:pal("got ~p", [Data]),
     Attrs = [{d_addr,{54,192,147,29}},
              {s_addr,{10,0,79,182}},
-             {age_ms,11538517120597884928},
-             {vals, [{rtt_var_us,3518496768},
-                     {rtt_var_ms,788529152},
+             {age_ms,806101408},
+             {vals, [{rtt_var_us,47313},
+                     {rtt_var_ms,47},
                      {7,<<104,92,0,0>>},
-                     {ss_thresh,385875968},
-                     {reordering,167772160}
+                     {ss_thresh,23},
+                     {reordering,10}
                     ]}],
     [{netlink,tcp_metrics, [multi], 18,31595, {get,1,0,Attrs}} | _Rest] = Data.
 

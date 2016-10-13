@@ -1014,26 +1014,26 @@ define_consts() ->
             {unspec, none},
             {d_addr, addr},
             {d_addr_v6, binary},
-            {age_ms, uint64},
-            {tw_tsval, uint32},
-            {tw_ts_stamp_sec, int32},
+            {age_ms, huint64},
+            {tw_tsval, huint32},
+            {tw_ts_stamp_sec, huint32},
             {vals, {nested, {tcp_metrics, vals}}},
-            {fopen_mss, uint16},
-            {fopen_syn_drops, uint16},
-            {fopen_syn_drops_ts_ms, uint64},
+            {fopen_mss, huint16},
+            {fopen_syn_drops, huint16},
+            {fopen_syn_drops_ts_ms, huint64},
             {fopen_cookie, binary},
             {s_addr, addr},
             {s_addr_v6, binary},
             {pad, none} 
         ]},
         {{tcp_metrics, vals}, [
-            {rtt_ms, uint32},
-            {rtt_var_ms, uint32},
-            {ss_thresh, uint32},
-            {cwnd, uint32},
-            {reordering, uint32},
-            {rtt_us, uint64},
-            {rtt_var_us, uint32}
+            {rtt_ms, huint32},
+            {rtt_var_ms, huint32},
+            {ss_thresh, huint32},
+            {cwnd, huint32},
+            {reordering, huint32},
+            {rtt_us, huint64},
+            {rtt_var_us, huint32}
         ]}
     ].
 
