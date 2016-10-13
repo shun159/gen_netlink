@@ -2774,13 +2774,13 @@ decode_tcp_metrics_vals(_Family, 1, Value) ->
     {rtt_var_ms, decode_uint32(Value)};
 
 decode_tcp_metrics_vals(_Family, 2, Value) ->
-    {ss_thresh, decode_none(Value)};
+    {ss_thresh, decode_uint32(Value)};
 
 decode_tcp_metrics_vals(_Family, 3, Value) ->
-    {cwnd, decode_none(Value)};
+    {cwnd, decode_uint32(Value)};
 
 decode_tcp_metrics_vals(_Family, 4, Value) ->
-    {reordering, decode_none(Value)};
+    {reordering, decode_uint32(Value)};
 
 decode_tcp_metrics_vals(_Family, 5, Value) ->
     {rtt_us, decode_uint64(Value)};
@@ -5547,13 +5547,13 @@ encode_tcp_metrics_vals(_Family, {rtt_var_ms, Value}) ->
     encode_uint32(1, Value);
 
 encode_tcp_metrics_vals(_Family, {ss_thresh, Value}) ->
-    encode_none(2, Value);
+    encode_uint32(2, Value);
 
 encode_tcp_metrics_vals(_Family, {cwnd, Value}) ->
-    encode_none(3, Value);
+    encode_uint32(3, Value);
 
 encode_tcp_metrics_vals(_Family, {reordering, Value}) ->
-    encode_none(4, Value);
+    encode_uint32(4, Value);
 
 encode_tcp_metrics_vals(_Family, {rtt_us, Value}) ->
     encode_uint64(5, Value);

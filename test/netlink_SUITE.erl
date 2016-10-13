@@ -561,8 +561,9 @@ test_tcp_metrics_get_rsp_dec(_Config) ->
              {vals, [{rtt_var_us,3518496768},
                      {rtt_var_ms,788529152},
                      {7,<<104,92,0,0>>},
-                     {ss_thresh,<<23,0,0,0>>},
-                     {reordering,<<10,0,0,0>>}]}],
+                     {ss_thresh,385875968},
+                     {reordering,167772160}
+                    ]}],
     [{netlink,tcp_metrics, [multi], 18,31595, {get,1,0,Attrs}} | _Rest] = Data.
 
 all() ->

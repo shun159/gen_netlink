@@ -1029,9 +1029,9 @@ define_consts() ->
         {{tcp_metrics, vals}, [
             {rtt_ms, uint32},
             {rtt_var_ms, uint32},
-            {ss_thresh, none},
-            {cwnd, none},
-            {reordering, none},
+            {ss_thresh, uint32},
+            {cwnd, uint32},
+            {reordering, uint32},
             {rtt_us, uint64},
             {rtt_var_us, uint32}
         ]}
