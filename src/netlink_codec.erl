@@ -645,8 +645,8 @@ nl_enc_payload({netlink, _GenlType}, ipvs, {IPVSCmd, Version, ResId, Req}) ->
     Data = nl_enc_nla(IPVSCmd, fun encode_ipvs_attrs/2, Req),
     <<Cmd:8, Version:8, ResId:16/native-integer, Data/binary>>;
 
-nl_enc_payload({netlink, _GenlType}, tcp_metrics, {Cmd, Version, ResId, Req}) ->
-    Cmd = encode_tcp_metrics_cmd(Cmd),
+nl_enc_payload({netlink, _GenlType}, tcp_metrics, {TCPMCmd, Version, ResId, Req}) ->
+    Cmd = encode_tcp_metrics_cmd(TCPMCmd),
     Data = nl_enc_nla(Cmd, fun encode_tcp_metrics_attrs/2, Req),
     <<Cmd:8, Version:8, ResId:16/native-integer, Data/binary>>;
 
