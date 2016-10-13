@@ -539,6 +539,19 @@ test_ipvs(_Config) ->
     %% 27 was the original IPVS generic netlink family used to encode this message
     EncodedMsg =  netlink_codec:nl_enc(27, DecodedMsg).
 
+test_tcp_metrics_get_enc(_Config) ->
+    GetMsg = <<20, 0, 0, 0, 24, 0, 1, 3, 145, 211, 255, 87, 0, 0, 0, 0, 1, 1, 0, 0>>,
+    Family = 24,
+    Pid = 0,
+    Seq = 1476383633,
+    Flags = [?NLM_F_DUMP, request],
+    Msg = {netlink, tcp_metrics, Flags, Seq, Pid, {get, 1, 0, []}},
+    Data = netlink_codec:nl_enc(Family, Msg),
+    ct:pal("got ~p", [Data]),
+    ct:pal("exp ~p", [GetMsg]),
+    GetMsg =  Data.
+
+
 all() ->
 	[test_conntrack_new,
 	 test_rt_newneigh_1, test_rt_newneigh_2, test_rt_delroute,
@@ -549,7 +562,7 @@ all() ->
 	 test_nfq_bind_socket, test_nfq_set_copy_mode,
 	 test_nfq_set_verdict,
 	 test_nft_requests,
-	 test_genl, test_ipvs
+	 test_genl, test_ipvs, test_tcp_metrics_get_enc
 	].
 
 init_per_suite(Config) ->
