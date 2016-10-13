@@ -228,7 +228,9 @@ decode_nl_msg_type_1(queue, Type) ->
 decode_nl_msg_type_1({netlink, gtp}, _Type) ->
     gtp;
 decode_nl_msg_type_1({netlink, ipvs}, _Type) ->
-    ipvs.
+    ipvs;
+decode_nl_msg_type_1({netlink, tcp_metrics}, _Type) ->
+    tcp_metrics.
 
 decode_rtnetlink_rtm_flags(Flags) ->
     decode_flag(flag_info_rtnetlink_rtm_flags(), Flags).
@@ -270,6 +272,8 @@ encode_nl_msg(generic, netlink, Type) ->
 encode_nl_msg(_Protocol, rtnetlink, Type) ->
     encode_rtm_msgtype_rtnetlink(Type);
 encode_nl_msg(Protocol, netlink, ipvs) ->
+    Protocol;
+encode_nl_msg(Protocol, netlink, tcp_metrics) ->
     Protocol;
 encode_nl_msg(Protocol, netlink, gtp) ->
     Protocol;
