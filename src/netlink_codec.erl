@@ -730,7 +730,9 @@ nl_dec_payload({netlink, gtp}, _MsgType, << Cmd:8, Version:8, ResId:16/native-in
 nl_dec_payload({netlink, ipvs}, _MsgType, << Cmd:8, Version:8, ResId:16/native-integer, Data/binary >>) ->
     IPVSCmd = decode_ipvs_cmd(Cmd),
     { IPVSCmd, Version, ResId, nl_dec_nla(IPVSCmd, fun decode_ipvs_attrs/3, Data) };
-%% Other
+nl_dec_payload({netlink, tcp_metrics}, _MsgType, << Cmd:8, Version:8, ResId:16/native-integer, Data/binary >>) ->
+    TCPMCmd = decode_tcp_metrics_cmd(Cmd),
+    { TCPMCmd, Version, ResId, nl_dec_nla(TCPMCmd, fun decode_tcp_metrics_attrs/3, Data) };
 nl_dec_payload(_SubSys, _MsgType, Data) ->
     io:format("unknown SubSys/MsgType: ~p/~p~n", [_SubSys, _MsgType]),
     lager:warning("unknown SubSys/MsgType: ~p/~p", [_SubSys, _MsgType]),

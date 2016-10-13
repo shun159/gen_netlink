@@ -22,7 +22,7 @@
      end)(Expected, Actual) orelse error(badmatch)).
 
 conntrack_new() ->
-	<<196,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,2,0,0,0,52,0,1,128,20,0,
+    <<196,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,2,0,0,0,52,0,1,128,20,0,
       1,128,8,0,1,0,192,168,2,24,8,0,2,0,192,168,2,9,28,0,2,128,5,0,1,0,6,0,0,
       0,6,0,2,0,215,100,0,0,6,0,3,0,0,25,0,0,52,0,2,128,20,0,1,128,8,0,1,0,192,
       168,2,9,8,0,2,0,192,168,2,24,28,0,2,128,5,0,1,0,6,0,0,0,6,0,2,0,0,25,0,0,
@@ -31,17 +31,17 @@ conntrack_new() ->
       0,6,0,4,0,55,0,0,0,6,0,5,0,35,0,0,0>>.
 
 rt_newneigh_1() ->
-	<<76,0,0,0,28,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,5,0,0,0,2,0,0,1,
+    <<76,0,0,0,28,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,5,0,0,0,2,0,0,1,
       8,0,1,0,192,168,2,3,10,0,2,0,0,14,12,186,3,162,0,0,8,0,4,0,4,0,0,0,20,0,
       3,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0>>.
 
 rt_newneigh_2() ->
-	<<88,0,0,0,28,0,0,0,0,0,0,0,0,0,0,0,10,0,0,0,5,0,0,0,2,0,0,
+    <<88,0,0,0,28,0,0,0,0,0,0,0,0,0,0,0,10,0,0,0,5,0,0,0,2,0,0,
       1,20,0,1,0,32,1,6,248,18,217,0,0,0,0,0,0,0,0,0,9,10,0,2,0,0,80,86,174,41,
       172,0,0,8,0,4,0,1,0,0,0,20,0,3,0,33,1,0,0,33,1,0,0,0,0,0,0,3,0,0,0>>.
 
 rt_delroute() ->
-	<<156,0,0,0,25,0,0,0,0,0,0,0,0,0,0,0,10,128,0,0,255,0,0,1,0,
+    <<156,0,0,0,25,0,0,0,0,0,0,0,0,0,0,0,10,128,0,0,255,0,0,1,0,
       2,0,0,8,0,15,0,255,0,0,0,20,0,1,0,255,2,0,0,0,0,0,0,0,0,0,0,0,0,0,251,28,
       0,8,0,8,0,2,0,220,5,0,0,8,0,8,0,160,5,0,0,8,0,10,0,255,255,255,255,20,0,
       5,0,255,2,0,0,0,0,0,0,0,0,0,0,0,0,0,251,8,0,4,0,5,0,0,0,8,0,6,0,0,0,0,0,
@@ -49,12 +49,12 @@ rt_delroute() ->
       0>>.
 
 rt_newprefix() ->
-	<<60,0,0,0,52,0,0,0,0,0,0,0,0,0,0,0,10,0,0,0,5,0,0,0,3,64,
+    <<60,0,0,0,52,0,0,0,0,0,0,0,0,0,0,0,10,0,0,0,5,0,0,0,3,64,
       3,0,20,0,1,0,32,1,6,248,18,217,0,0,0,0,0,0,0,0,0,0,12,0,2,0,128,58,9,0,0,
       141,39,0>>.
 
 rt_newlink_1() ->
-	<<8,2,0,0,16,0,0,0,0,0,0,0,0,0,0,0,10,0,1,0,6,0,0,0,3,16,
+    <<8,2,0,0,16,0,0,0,0,0,0,0,0,0,0,0,10,0,1,0,6,0,0,0,3,16,
       1,0,0,0,0,0,10,0,3,0,118,108,97,110,52,0,0,0,10,0,1,0,0,25,185,71,250,19,
       0,0,8,0,4,0,220,5,0,0,8,0,5,0,5,0,0,0,192,1,12,0,8,0,1,0,0,0,0,128,20,0,
       5,0,255,255,0,0,108,53,74,4,192,16,0,0,100,0,0,0,120,0,2,0,0,0,0,0,64,0,
@@ -72,7 +72,7 @@ rt_newlink_1() ->
       0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0>>.
 
 rt_newlink_2() ->
-	<<188,1,0,0,16,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,2,0,0,0,3,16,0,
+    <<188,1,0,0,16,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,2,0,0,0,3,16,0,
       0,1,0,0,0,9,0,3,0,101,116,104,49,0,0,0,0,8,0,13,0,232,3,0,0,5,0,16,0,2,0,
       0,0,5,0,17,0,0,0,0,0,8,0,4,0,220,5,0,0,15,0,6,0,112,102,105,102,111,95,
       102,97,115,116,0,0,36,0,14,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,128,239,51,
@@ -88,7 +88,7 @@ rt_newlink_2() ->
       0,0,0,0,0,0,0,0,0,0,0,8,0,21,0,0,0,0,0>>.
 
 rt_linkinfo_1() ->
-	<<224,1,0,0,16,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,6,0,0,0,2,16,
+    <<224,1,0,0,16,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,6,0,0,0,2,16,
       0,0,1,0,0,0,10,0,3,0,118,108,97,110,52,0,0,0,8,0,13,0,0,0,0,0,5,0,16,0,2,
       0,0,0,5,0,17,0,0,0,0,0,8,0,4,0,220,5,0,0,8,0,5,0,5,0,0,0,12,0,6,0,110,
       111,113,117,101,117,101,0,36,0,14,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -105,7 +105,7 @@ rt_linkinfo_1() ->
       0,0,0,24,0,2,0,6,0,1,0,4,0,0,0,12,0,2,0,1,0,0,0,255,255,255,255>>.
 
 rt_linkinfo_complex() ->
-	<<172,1,0,0,16,0,2,0,0,0,0,0,0,0,255,255,0,0,4,3,1,0,0,0,
+    <<172,1,0,0,16,0,2,0,0,0,0,0,0,0,255,255,0,0,4,3,1,0,0,0,
       73,0,1,0,0,0,0,0,7,0,3,0,108,111,0,0,8,0,13,0,0,0,0,0,5,0,16,0,0,0,0,0,5,
       0,17,0,0,0,0,0,8,0,4,0,52,64,0,0,12,0,6,0,110,111,113,117,101,117,101,0,
       36,0,14,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -448,51 +448,51 @@ ipvs_metrics() ->
 %% @end
 %%--------------------------------------------------------------------
 suite() ->
-	[{timetrap,{seconds,30}}].
+    [{timetrap,{seconds,30}}].
 
 test_conntrack_new(_Config) ->
-	Msg = conntrack_new(),
-	Msg = netlink_codec:nl_ct_enc(netlink_codec:nl_ct_dec(Msg)),
+    Msg = conntrack_new(),
+    Msg = netlink_codec:nl_ct_enc(netlink_codec:nl_ct_dec(Msg)),
     ok.
 
 test_rt_newneigh_1(_Config) ->
-	Msg = rt_newneigh_1(),
-	Msg = netlink_codec:nl_rt_enc(netlink_codec:nl_rt_dec(Msg)),
+    Msg = rt_newneigh_1(),
+    Msg = netlink_codec:nl_rt_enc(netlink_codec:nl_rt_dec(Msg)),
     ok.
 
 test_rt_newneigh_2(_Config) ->
-	Msg = rt_newneigh_2(),
-	Msg = netlink_codec:nl_rt_enc(netlink_codec:nl_rt_dec(Msg)),
+    Msg = rt_newneigh_2(),
+    Msg = netlink_codec:nl_rt_enc(netlink_codec:nl_rt_dec(Msg)),
     ok.
 
 test_rt_delroute(_Config) ->
-	Msg = rt_delroute(),
-	Msg = netlink_codec:nl_rt_enc(netlink_codec:nl_rt_dec(Msg)),
+    Msg = rt_delroute(),
+    Msg = netlink_codec:nl_rt_enc(netlink_codec:nl_rt_dec(Msg)),
     ok.
 
 test_rt_newprefix(_Config) ->
-	Msg = rt_newprefix(),
-	Msg = netlink_codec:nl_rt_enc(netlink_codec:nl_rt_dec(Msg)),
+    Msg = rt_newprefix(),
+    Msg = netlink_codec:nl_rt_enc(netlink_codec:nl_rt_dec(Msg)),
     ok.
 
 test_rt_newlink_1(_Config) ->
-	Msg = rt_newlink_1(),
-	Msg = netlink_codec:nl_rt_enc(netlink_codec:nl_rt_dec(Msg)),
+    Msg = rt_newlink_1(),
+    Msg = netlink_codec:nl_rt_enc(netlink_codec:nl_rt_dec(Msg)),
     ok.
 
 test_rt_newlink_2(_Config) ->
-	Msg = rt_newlink_2(),
-	Msg = netlink_codec:nl_rt_enc(netlink_codec:nl_rt_dec(Msg)),
+    Msg = rt_newlink_2(),
+    Msg = netlink_codec:nl_rt_enc(netlink_codec:nl_rt_dec(Msg)),
     ok.
 
 test_rt_linkinfo_1(_Config) ->
-	Msg = rt_linkinfo_1(),
-	Msg = netlink_codec:nl_rt_enc(netlink_codec:nl_rt_dec(Msg)),
+    Msg = rt_linkinfo_1(),
+    Msg = netlink_codec:nl_rt_enc(netlink_codec:nl_rt_dec(Msg)),
     ok.
 
 test_rt_linkinfo_complex(_Config) ->
-	Msg = rt_linkinfo_complex(),
-	Msg = netlink_codec:nl_rt_enc(netlink_codec:nl_rt_dec(Msg)),
+    Msg = rt_linkinfo_complex(),
+    Msg = netlink_codec:nl_rt_enc(netlink_codec:nl_rt_dec(Msg)),
     ok.
 
 test_nfq_unbind(_Config) ->
@@ -522,10 +522,10 @@ test_nfq_set_verdict(_Config) ->
 
 test_nft_requests(_Config) ->
     lists:foreach(fun(Msg) ->
-			  D = netlink_codec:nl_ct_dec(Msg),
-			  ct:pal("D: ~p", [D]),
-			  ?equal(Msg, netlink_codec:nl_ct_enc(D))
-		  end, nft_requests()),
+              D = netlink_codec:nl_ct_dec(Msg),
+              ct:pal("D: ~p", [D]),
+              ?equal(Msg, netlink_codec:nl_ct_enc(D))
+          end, nft_requests()),
     ok.
 
 test_genl(_Config) ->
@@ -551,23 +551,33 @@ test_tcp_metrics_get_enc(_Config) ->
     ct:pal("exp ~p", [GetMsg]),
     GetMsg =  Data.
 
+test_tcp_metrics_get_rsp_dec(_Config) ->
+    Rsp = <<36,0,0,0,2,0,0,0,18,0,0,0,253,119,0,0,0,0,0,0,36,0,0,0,16,0,5,0,18,0,0,0,0,0,0,0>>,
+    Rsp2 = <<92, 0, 0, 0, 24, 0, 2, 0, 51, -33, -1, 87, 82, 119, 0, 0, 1, 1, 0, 0, 8, 0, 1, 0, 54, -64, -109, 29, 8, 0, 11, 0, 10, 0, 79, -74, 12, 0, 3, 0, -80, -58, -62, 47, 0, 0, 0, 0, 44, 0, 6, 0, 8, 0, 6, 0, -47, -72, 0, 0, 8, 0, 1, 0, 47, 0, 0, 0, 8, 0, 7, 0, 104, 92, 0, 0, 8, 0, 2, 0, 23, 0, 0, 0, 8, 0, 4, 0, 10, 0, 0, 0, 48, 0, 0, 0, 24, 0, 2, 0>>,
+    36 = size(Rsp),
+    Data = netlink_codec:nl_dec(tcp_metrics, Rsp),
+    ct:pal("got ~p", [Data]),
+    Data2 = netlink_codec:nl_dec(tcp_metrics, Rsp2),
+    ct:pal("got ~p", [Data2]),
+    Rsp =  Data.
 
 all() ->
-	[test_conntrack_new,
-	 test_rt_newneigh_1, test_rt_newneigh_2, test_rt_delroute,
-	 test_rt_newprefix,
-	 test_rt_newlink_1, test_rt_newlink_2,
-	 test_rt_linkinfo_1, test_rt_linkinfo_complex,
-	 test_nfq_unbind, test_nfq_bind_queue,
-	 test_nfq_bind_socket, test_nfq_set_copy_mode,
-	 test_nfq_set_verdict,
-	 test_nft_requests,
-	 test_genl, test_ipvs, test_tcp_metrics_get_enc
-	].
+    [test_conntrack_new,
+     test_rt_newneigh_1, test_rt_newneigh_2, test_rt_delroute,
+     test_rt_newprefix,
+     test_rt_newlink_1, test_rt_newlink_2,
+     test_rt_linkinfo_1, test_rt_linkinfo_complex,
+     test_nfq_unbind, test_nfq_bind_queue,
+     test_nfq_bind_socket, test_nfq_set_copy_mode,
+     test_nfq_set_verdict,
+     test_nft_requests,
+     test_genl, test_ipvs,
+     test_tcp_metrics_get_enc, test_tcp_metrics_get_rsp_dec
+    ].
 
 init_per_suite(Config) ->
-	Config.
+    Config.
 
 end_per_suite(_Config) ->
-	ok.
+    ok.
 
