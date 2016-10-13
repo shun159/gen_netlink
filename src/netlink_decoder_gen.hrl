@@ -5433,5 +5433,3 @@ encode_tcp_metrics_attrs(_Family, {unspec, Value}) ->
 encode_tcp_metrics_attrs(_Family, {Type, Value})
   when is_integer(Type), is_binary(Value) ->
     enc_nla(Type, Value).
-    Value.
-    enc_nla(Type, Value).
