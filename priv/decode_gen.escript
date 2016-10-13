@@ -1012,7 +1012,28 @@ define_consts() ->
         {{tcp_metrics, cmd}, [unspec, get]},
         {{tcp_metrics, attrs}, [
             {unspec, none},
-            {dest, addr}
+            {d_addr, addr},
+            {d_addr_v6, binary},
+            {age_ms, uint64},
+            {tw_tsval, uint32},
+            {tw_ts_stamp_sec, int32},
+            {vals, {nested, {tcp_metrics, vals}}},
+            {fopen_mss, uint16},
+            {fopen_syn_drops, uint16},
+            {fopen_syn_drops_ts_ms, uint64},
+            {fopen_cookie, binary},
+            {s_addr, addr},
+            {s_addr_v6, binary},
+            {pad, none} 
+        ]},
+        {{tcp_metrics, vals}, [
+            {rtt_ms, uint32},
+            {rtt_var_ms, uint32},
+            {ss_thresh, none},
+            {cwnd, none},
+            {reordering, none},
+            {rtt_us, uint64},
+            {rtt_var_us, uint32}
         ]}
     ].
 
