@@ -555,7 +555,13 @@ test_tcp_metrics_get_rsp_dec(_Config) ->
     Rsp = tcp_metrics_get_rsp(),
     Data = netlink_codec:nl_dec(tcp_metrics, Rsp),
     ct:pal("got ~p", [Data]),
-    [{netlink,tcp_metrics, [multi], 18,31595, {get,1,0,_Attrs}} | _Rest] = Data.
+    Attrs = [{dest,{54,192,147,29}},
+             {11,<<10,0,79,182>>},
+             {3,<<160,33,12,48,0,0,0,0>>},
+             {6, <<8,0,6,0,209,184,0,0,8,0,1,0,47,0,0,0,
+                   8,0,7,0,104,92,0,0,8,0,2,0,23,0,0,0,
+                   8,0,4,0,10,0,0,0>>}],
+    [{netlink,tcp_metrics, [multi], 18,31595, {get,1,0,Attrs}} | _Rest] = Data.
 
 all() ->
     [test_conntrack_new,

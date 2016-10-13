@@ -1011,7 +1011,8 @@ define_consts() ->
         ]},
         {{tcp_metrics, cmd}, [unspec, get]},
         {{tcp_metrics, attrs}, [
-            {unspec, none}
+            {unspec, none},
+            {dest, addr}
         ]}
     ].
 
