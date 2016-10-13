@@ -2768,24 +2768,27 @@ decode_tcp_metrics_attrs(_Family, Id, Value) ->
 %% ============================
 
 decode_tcp_metrics_vals(_Family, 0, Value) ->
-    {rtt_ms, decode_huint32(Value)};
+    {unspec, decode_none(Value)};
 
 decode_tcp_metrics_vals(_Family, 1, Value) ->
-    {rtt_var_ms, decode_huint32(Value)};
+    {rtt_ms, decode_huint32(Value)};
 
 decode_tcp_metrics_vals(_Family, 2, Value) ->
-    {ss_thresh, decode_huint32(Value)};
+    {rtt_var_ms, decode_huint32(Value)};
 
 decode_tcp_metrics_vals(_Family, 3, Value) ->
-    {cwnd, decode_huint32(Value)};
+    {ss_thresh, decode_huint32(Value)};
 
 decode_tcp_metrics_vals(_Family, 4, Value) ->
-    {reordering, decode_huint32(Value)};
+    {cwnd, decode_huint32(Value)};
 
 decode_tcp_metrics_vals(_Family, 5, Value) ->
-    {rtt_us, decode_huint64(Value)};
+    {reordering, decode_huint32(Value)};
 
 decode_tcp_metrics_vals(_Family, 6, Value) ->
+    {rtt_us, decode_huint32(Value)};
+
+decode_tcp_metrics_vals(_Family, 7, Value) ->
     {rtt_var_us, decode_huint32(Value)};
 
 decode_tcp_metrics_vals(_Family, Id, Value) ->
@@ -5540,26 +5543,29 @@ encode_tcp_metrics_attrs(_Family, {Type, Value})
 
 %% ============================
 
-encode_tcp_metrics_vals(_Family, {rtt_ms, Value}) ->
-    encode_huint32(0, Value);
+encode_tcp_metrics_vals(_Family, {unspec, Value}) ->
+    encode_none(0, Value);
 
-encode_tcp_metrics_vals(_Family, {rtt_var_ms, Value}) ->
+encode_tcp_metrics_vals(_Family, {rtt_ms, Value}) ->
     encode_huint32(1, Value);
 
-encode_tcp_metrics_vals(_Family, {ss_thresh, Value}) ->
+encode_tcp_metrics_vals(_Family, {rtt_var_ms, Value}) ->
     encode_huint32(2, Value);
 
-encode_tcp_metrics_vals(_Family, {cwnd, Value}) ->
+encode_tcp_metrics_vals(_Family, {ss_thresh, Value}) ->
     encode_huint32(3, Value);
 
-encode_tcp_metrics_vals(_Family, {reordering, Value}) ->
+encode_tcp_metrics_vals(_Family, {cwnd, Value}) ->
     encode_huint32(4, Value);
 
+encode_tcp_metrics_vals(_Family, {reordering, Value}) ->
+    encode_huint32(5, Value);
+
 encode_tcp_metrics_vals(_Family, {rtt_us, Value}) ->
-    encode_huint64(5, Value);
+    encode_huint32(6, Value);
 
 encode_tcp_metrics_vals(_Family, {rtt_var_us, Value}) ->
-    encode_huint32(6, Value);
+    encode_huint32(7, Value);
 
 encode_tcp_metrics_vals(_Family, {Type, Value})
   when is_integer(Type), is_binary(Value) ->

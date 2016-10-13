@@ -558,12 +558,11 @@ test_tcp_metrics_get_rsp_dec(_Config) ->
     Attrs = [{d_addr,{54,192,147,29}},
              {s_addr,{10,0,79,182}},
              {age_ms,806101408},
-             {vals, [{rtt_var_us,47313},
-                     {rtt_var_ms,47},
-                     {7,<<104,92,0,0>>},
-                     {ss_thresh,23},
-                     {reordering,10}
-                    ]}],
+             {vals,[{rtt_us,47313},
+                    {rtt_ms,47},
+                    {rtt_var_us,23656},
+                    {rtt_var_ms,23},
+                    {cwnd,10}]}],
     [{netlink,tcp_metrics, [multi], 18,31595, {get,1,0,Attrs}} | _Rest] = Data.
 
 all() ->

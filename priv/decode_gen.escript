@@ -1027,12 +1027,13 @@ define_consts() ->
             {pad, none} 
         ]},
         {{tcp_metrics, vals}, [
+            {unspec, none},
             {rtt_ms, huint32},
             {rtt_var_ms, huint32},
             {ss_thresh, huint32},
             {cwnd, huint32},
             {reordering, huint32},
-            {rtt_us, huint64},
+            {rtt_us, huint32},
             {rtt_var_us, huint32}
         ]}
     ].
