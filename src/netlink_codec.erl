@@ -13,8 +13,8 @@
 
 -endif.
 
--include_lib("gen_socket/include/gen_socket.hrl").
--include_lib("gen_socket/include/gen_socket_shared.hrl").
+-include("gen_netlink.hrl").
+-include("gen_netlink_shared.hrl").
 -include("netlink.hrl").
 
 -type genl_family() :: integer() | {term(), integer()}.
