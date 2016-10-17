@@ -200,4 +200,6 @@
 -define(LOG(Formatting), begin _ = Formatting end).
 
 -record(getfamily, {version = 1, reserved = 0, request}).
+-record(newfamily, {version = 2, reserved = 0, request}).
+
 -endif.
