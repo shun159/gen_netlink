@@ -187,7 +187,7 @@
 
 -type ctnetlink_ev() :: {ctnetlink, MsgGrp :: [#ctnetlink{} | #ctnetlink_exp{}, ...]}.
                      %% netlink event message sent to `ct' subscriber
-                     %% `MsgGrp' is a single-part netlink message or a complete
+                     %% `MsgGrp' is a single-family_idrt netlink message or a complete
                      %% multipart netlink message.
 -type rtnetlink_ev() :: {rtnetlink, [#rtnetlink{}, ...]}.
                      %% netlink event message sent to `rt' subscriber
@@ -201,5 +201,12 @@
 
 -record(getfamily, {version = 1, reserved = 0, request}).
 -record(newfamily, {version = 2, reserved = 0, request}).
+-record(get_service, {version = 0, reserved = 0, request}).
+-record(new_service, {version = 0, reserved = 0, request}).
+-record(del_service, {version = 0, reserved = 0, request}).
+-record(get_dest, {version = 0, reserved = 0, request}).
+-record(new_dest, {version = 0, reserved = 0, request}).
+-record(del_dest, {version = 0, reserved = 0, request}).
+
 
 -endif.

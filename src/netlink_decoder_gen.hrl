@@ -2670,7 +2670,7 @@ decode_ipvs_dest_attributes(Family, 10, Value) ->
     {stats, nl_dec_nla(Family, fun decode_ipvs_stats/3, Value)};
 
 decode_ipvs_dest_attributes(_Family, 11, Value) ->
-    {addr_family, decode_huint16(Value)};
+    {address_family, decode_huint16(Value)};
 
 decode_ipvs_dest_attributes(Family, 12, Value) ->
     {stats64, nl_dec_nla(Family, fun decode_ipvs_stats64/3, Value)};
@@ -5355,7 +5355,7 @@ encode_ipvs_dest_attributes(_Family, {persist_conns, Value}) ->
 encode_ipvs_dest_attributes(Family, {stats, Value}) ->
     enc_nla(10, nl_enc_nla(Family, fun encode_ipvs_stats/2, Value));
 
-encode_ipvs_dest_attributes(_Family, {addr_family, Value}) ->
+encode_ipvs_dest_attributes(_Family, {address_family, Value}) ->
     encode_huint16(11, Value);
 
 encode_ipvs_dest_attributes(Family, {stats64, Value}) ->

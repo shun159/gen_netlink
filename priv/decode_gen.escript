@@ -996,7 +996,7 @@ define_consts() ->
             {inact_conns, huint32},
             {persist_conns, huint32},
             {stats, {nested, {ipvs, stats}}},
-            {addr_family, huint16},
+            {address_family, huint16},
             {stats64, {nested, {ipvs, stats64}}}
         ]},
         {{ipvs, daemon, attributes}, [
