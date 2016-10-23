@@ -79,7 +79,8 @@
 -type rtnetlink_addr() :: {family(),non_neg_integer(),nl_flags(),non_neg_integer(),non_neg_integer(),nla()}.
 -type rtnetlink_link() :: {family(),arphdr(),non_neg_integer(),nl_flags(),nl_flags(),nla()}.
 -type rtnetlink_prefix() :: {family(),ifindex(),non_neg_integer(),non_neg_integer(),nl_flags(),nla()}.
--type rtnetlink_msg() :: rtnetlink_neigh() | rtnetlink_route() | rtnetlink_addr() | rtnetlink_link() | rtnetlink_prefix().
+-type rtnetlink_error() :: {integer(), term()}.
+-type rtnetlink_msg() :: rtnetlink_neigh() | rtnetlink_route() | rtnetlink_addr() | rtnetlink_link() | rtnetlink_prefix() | rtnetlink_error().
 
 %% no subsystem
 -record(netlink, {
