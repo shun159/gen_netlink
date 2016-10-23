@@ -20,7 +20,10 @@
 
 -type genl_family() :: integer() | {term(), integer()}.
 
--define(IS_NEW(Type), (Type == new orelse
+-define(IS_NEW(Type), (
+    Type == new_service orelse
+    Type == new_dest orelse
+    Type == newservice orelse
     Type == newlink orelse
     Type == newaddr orelse
     Type == newroute orelse
@@ -547,7 +550,7 @@ nl_dec_nla(Family, Fun, Data)
 nl_enc_nla(_Family, _Fun, [], Acc) ->
     list_to_binary(lists:reverse(Acc));
 nl_enc_nla(Family, Fun, [Head|Rest], Acc) ->
-    lager:debug("nl_enc_nla: ~w, ~w~n", [Family, Head]),
+%    lager:debug("nl_enc_nla: ~w, ~w~n", [Family, Head]),
     H = Fun(Family, Head),
     nl_enc_nla(Family, Fun, Rest, [H|Acc]).
 
@@ -571,7 +574,7 @@ nl_enc_payload(rtnetlink, MsgType, {Family, IfIndex, State, Flags, NdmType, Req}
     << Fam:8, 0:8, 0:16, IfIndex:32/native-signed-integer, State:16/native-integer, Flags:8, NdmType:8, Data/binary >>;
 
 nl_enc_payload(rtnetlink, MsgType, {Family, PrefixLen, Flags, Scope, Index, Req})
-    when MsgType == newaddr; MsgType == deladdr ->
+    when MsgType == newaddr; MsgType == deladdr; MsgType == getaddr ->
     Fam = family(Family),
     Data = nl_enc_nla(Family, fun encode_rtnetlink_addr/2, Req),
     << Fam:8, PrefixLen:8, Flags:8, Scope:8, Index:32/native-integer, Data/binary >>;
