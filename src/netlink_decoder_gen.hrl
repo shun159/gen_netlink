@@ -2479,6 +2479,21 @@ decode_ipvs_cmd(7) ->
 decode_ipvs_cmd(8) ->
     get_dest;
 
+decode_ipvs_cmd(9) ->
+    new_daemon;
+
+decode_ipvs_cmd(10) ->
+    del_daemon;
+
+decode_ipvs_cmd(11) ->
+    get_daemon;
+
+decode_ipvs_cmd(12) ->
+    set_timeout;
+
+decode_ipvs_cmd(13) ->
+    get_timeout;
+
 decode_ipvs_cmd(Value) ->
     Value.
 
@@ -5246,6 +5261,21 @@ encode_ipvs_cmd(del_dest) ->
 
 encode_ipvs_cmd(get_dest) ->
     8;
+
+encode_ipvs_cmd(new_daemon) ->
+    9;
+
+encode_ipvs_cmd(del_daemon) ->
+    10;
+
+encode_ipvs_cmd(get_daemon) ->
+    11;
+
+encode_ipvs_cmd(set_timeout) ->
+    12;
+
+encode_ipvs_cmd(get_timeout) ->
+    13;
 
 encode_ipvs_cmd(Value) when is_integer(Value) ->
     Value.

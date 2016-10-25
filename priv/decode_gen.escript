@@ -927,7 +927,7 @@ define_consts() ->
             {o_tid, huint32}
         ]},
 
-        {{ipvs, cmd}, [unspec, new_service, set_service, del_service, get_service, new_dest, set_dest, del_dest, get_dest]},
+        {{ipvs, cmd}, [unspec, new_service, set_service, del_service, get_service, new_dest, set_dest, del_dest, get_dest, new_daemon, del_daemon, get_daemon, set_timeout, get_timeout]},
 
         {{ipvs, attrs}, [
             {unspec, none},
