@@ -1421,6 +1421,71 @@ decode_rtnetlink_prefix(_Family, Id, Value) ->
 
 %% ============================
 
+decode_rtnetlink_rule(_Family, 0, Value) ->
+    {unspec, decode_none(Value)};
+
+decode_rtnetlink_rule(_Family, 1, Value) ->
+    {dst, decode_none(Value)};
+
+decode_rtnetlink_rule(_Family, 2, Value) ->
+    {src, decode_none(Value)};
+
+decode_rtnetlink_rule(_Family, 3, Value) ->
+    {iifname, decode_string(Value)};
+
+decode_rtnetlink_rule(_Family, 4, Value) ->
+    {goto, decode_huint32(Value)};
+
+decode_rtnetlink_rule(_Family, 5, Value) ->
+    {unused2, decode_none(Value)};
+
+decode_rtnetlink_rule(_Family, 6, Value) ->
+    {priority, decode_huint32(Value)};
+
+decode_rtnetlink_rule(_Family, 7, Value) ->
+    {unused3, decode_none(Value)};
+
+decode_rtnetlink_rule(_Family, 8, Value) ->
+    {unused4, decode_none(Value)};
+
+decode_rtnetlink_rule(_Family, 9, Value) ->
+    {unused5, decode_none(Value)};
+
+decode_rtnetlink_rule(_Family, 10, Value) ->
+    {fwmark, decode_huint32(Value)};
+
+decode_rtnetlink_rule(_Family, 11, Value) ->
+    {flow, decode_huint32(Value)};
+
+decode_rtnetlink_rule(_Family, 12, Value) ->
+    {tun_id, decode_none(Value)};
+
+decode_rtnetlink_rule(_Family, 13, Value) ->
+    {supress_ifgroup, decode_huint32(Value)};
+
+decode_rtnetlink_rule(_Family, 14, Value) ->
+    {supress_prefixlen, decode_huint32(Value)};
+
+decode_rtnetlink_rule(_Family, 15, Value) ->
+    {table, decode_huint32(Value)};
+
+decode_rtnetlink_rule(_Family, 16, Value) ->
+    {fwmask, decode_huint32(Value)};
+
+decode_rtnetlink_rule(_Family, 17, Value) ->
+    {oifname, decode_string(Value)};
+
+decode_rtnetlink_rule(_Family, 18, Value) ->
+    {pad, decode_none(Value)};
+
+decode_rtnetlink_rule(_Family, 19, Value) ->
+    {l3mdev, decode_uint8(Value)};
+
+decode_rtnetlink_rule(_Family, Id, Value) ->
+    {Id, Value}.
+
+%% ============================
+
 decode_nl_msgtype_queue(?NFQNL_MSG_PACKET) ->
     packet;
 
@@ -4059,6 +4124,72 @@ encode_rtnetlink_prefix(_Family, Value)
     encode_huint32_array(2, Value);
 
 encode_rtnetlink_prefix(_Family, {Type, Value})
+  when is_integer(Type), is_binary(Value) ->
+    enc_nla(Type, Value).
+
+%% ============================
+
+encode_rtnetlink_rule(_Family, {unspec, Value}) ->
+    encode_none(0, Value);
+
+encode_rtnetlink_rule(_Family, {dst, Value}) ->
+    encode_none(1, Value);
+
+encode_rtnetlink_rule(_Family, {src, Value}) ->
+    encode_none(2, Value);
+
+encode_rtnetlink_rule(_Family, {iifname, Value}) ->
+    encode_string(3, Value);
+
+encode_rtnetlink_rule(_Family, {goto, Value}) ->
+    encode_huint32(4, Value);
+
+encode_rtnetlink_rule(_Family, {unused2, Value}) ->
+    encode_none(5, Value);
+
+encode_rtnetlink_rule(_Family, {priority, Value}) ->
+    encode_huint32(6, Value);
+
+encode_rtnetlink_rule(_Family, {unused3, Value}) ->
+    encode_none(7, Value);
+
+encode_rtnetlink_rule(_Family, {unused4, Value}) ->
+    encode_none(8, Value);
+
+encode_rtnetlink_rule(_Family, {unused5, Value}) ->
+    encode_none(9, Value);
+
+encode_rtnetlink_rule(_Family, {fwmark, Value}) ->
+    encode_huint32(10, Value);
+
+encode_rtnetlink_rule(_Family, {flow, Value}) ->
+    encode_huint32(11, Value);
+
+encode_rtnetlink_rule(_Family, {tun_id, Value}) ->
+    encode_none(12, Value);
+
+encode_rtnetlink_rule(_Family, {supress_ifgroup, Value}) ->
+    encode_huint32(13, Value);
+
+encode_rtnetlink_rule(_Family, {supress_prefixlen, Value}) ->
+    encode_huint32(14, Value);
+
+encode_rtnetlink_rule(_Family, {table, Value}) ->
+    encode_huint32(15, Value);
+
+encode_rtnetlink_rule(_Family, {fwmask, Value}) ->
+    encode_huint32(16, Value);
+
+encode_rtnetlink_rule(_Family, {oifname, Value}) ->
+    encode_string(17, Value);
+
+encode_rtnetlink_rule(_Family, {pad, Value}) ->
+    encode_none(18, Value);
+
+encode_rtnetlink_rule(_Family, {l3mdev, Value}) ->
+    encode_uint8(19, Value);
+
+encode_rtnetlink_rule(_Family, {Type, Value})
   when is_integer(Type), is_binary(Value) ->
     enc_nla(Type, Value).
 

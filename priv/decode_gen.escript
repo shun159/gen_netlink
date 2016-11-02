@@ -544,6 +544,29 @@ define_consts() ->
             {address, addr},
             {prefix_cacheinfo, huint32_array}
         ]},
+        {{rtnetlink, rule}, [
+            %% Only doing generic attributes
+            {unspec, none},
+            {dst, none},
+            {src, none},
+            {iifname, string},
+            {goto, huint32},
+            {unused2, none},
+            {priority, huint32},
+            {unused3, none},
+            {unused4, none},
+            {unused5, none},
+            {fwmark, huint32},
+            {flow, huint32},
+            {tun_id, none},
+            {supress_ifgroup, huint32},
+            {supress_prefixlen, huint32},
+            {table, huint32},
+            {fwmask, huint32},
+            {oifname, string},
+            {pad, none},
+            {l3mdev, uint8}
+        ]},
 
         {{nl_msgtype, queue}, [
             {packet, {atom, "?NFQNL_MSG_PACKET"}},

@@ -597,6 +597,24 @@ nl_enc_payload(rtnetlink, MsgType, {Family, DstLen, SrcLen, Tos, Table, Protocol
         (encode_rtnetlink_rtm_type(RtmType)):8,
         (encode_rtnetlink_rtm_flags(Flags)):32/native-integer, Data/binary >>;
 
+nl_enc_payload(rtnetlink, MsgType, {Family, DstLen, SrcLen, Tos, Table, Protocol, Scope, RtmType, Flags, Req})
+    when MsgType == newrule; MsgType == delrule; MsgType == getrule->
+    Fam = family(Family),
+    lager:debug("nl_enc_payload: ~p~n", [{Family, DstLen, SrcLen, Tos, Table, Protocol, Scope, RtmType, Flags, Req}]),
+    lager:debug("~p, ~p, ~p, ~p, ~p~n", [encode_rtnetlink_rtm_table(Table),
+        encode_rtnetlink_rtm_protocol(Protocol),
+        encode_rtnetlink_rtm_scope(Scope),
+        encode_rtnetlink_rtm_type(RtmType),
+        encode_rtnetlink_rtm_flags(Flags)]),
+
+    Data = nl_enc_nla(Family, fun encode_rtnetlink_rule/2, Req),
+    << Fam:8, DstLen:8, SrcLen:8, Tos:8,
+        (encode_rtnetlink_rtm_table(Table)):8,
+        (encode_rtnetlink_rtm_protocol(Protocol)):8,
+        (encode_rtnetlink_rtm_scope(Scope)):8,
+        (encode_rtnetlink_rtm_type(RtmType)):8,
+        (encode_rtnetlink_rtm_flags(Flags)):32/native-integer, Data/binary >>;
+
 nl_enc_payload(rtnetlink, MsgType, {Family, Type, Index, Flags, Change, Req})
     when MsgType == newlink; MsgType == dellink; MsgType == getlink ->
     Fam = family(Family),
@@ -692,6 +710,11 @@ nl_dec_payload(rtnetlink, MsgType, << Family:8, _Pad1:8, _Pad2:16, IfIndex:32/na
     when MsgType == newprefix; MsgType == delprefix ->
     Fam = family(Family),
     { Fam, IfIndex, PfxType, PfxLen, Flags, nl_dec_nla(Fam, fun decode_rtnetlink_prefix/3, Data) };
+%% struct rtmsg
+nl_dec_payload(rtnetlink, MsgType, << Family:8, DstLen:8, SrcLen:8, Tos:8, Table:8, Protocol:8, Scope:8, RtmType:8, Flags:32/native-integer, Data/binary >> )
+    when MsgType == newrule; MsgType == delrule; MsgType == getrule ->
+    Fam = family(Family),
+    { Fam, DstLen, SrcLen, Tos, dec_rtm_table(Table), dec_rtm_protocol(Protocol), dec_rtm_scope(Scope), dec_rtm_type(RtmType), decode_rtnetlink_rtm_flags(Flags), nl_dec_nla(Fam, fun decode_rtnetlink_rule/3, Data) };
 
 nl_dec_payload(nftables, MsgType, << Family:8, Version:8, ResId:16/native-integer, Data/binary >>) ->
     Fam = family(Family),
