@@ -1,6 +1,7 @@
 gen_netlink
 ===========
 [![Build Status](https://travis-ci.org/travelping/gen_netlink.svg?branch=master)](https://travis-ci.org/travelping/gen_netlink)
+[![codecov.io](http://codecov.io/github/mesosphere/gen_netlink/coverage.svg)](http://codecov.io/github/mesosphere/gen_netlink)
 
 gen_netlink is a encoder, decoder and tool library for talking to the
 Linux kernel netlink interface.
