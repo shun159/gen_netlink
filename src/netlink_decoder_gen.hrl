@@ -5,7 +5,14 @@
 %% ============================
 
 flag_info_nlm_flags() ->
-    [{1,request},{2,multi},{4,ack},{8,echo},{16,dump_intr}].
+    [{1,request},
+     {2,multi},
+     {4,ack},
+     {8,echo},
+     {16,dump_intr},
+     {256,root},
+     {512,match},
+     {1024,atomic}].
 
 flag_info_nlm_get_flags() ->
     [{1,request},
@@ -553,13 +560,13 @@ decode_ctnetlink(_Family, Id, Value) ->
 %% ============================
 
 decode_ctnetlink_snat_entry(_Family, 0, Value) ->
-    {unspec, decode_none(Value)};
+    {unspec1, decode_none(Value)};
 
 decode_ctnetlink_snat_entry(_Family, 1, Value) ->
     {v4_src, decode_addr(Value)};
 
 decode_ctnetlink_snat_entry(_Family, 2, Value) ->
-    {unspec, decode_none(Value)};
+    {unspec2, decode_none(Value)};
 
 decode_ctnetlink_snat_entry(Family, 3, Value) ->
     {src_port, nl_dec_nla(Family, fun decode_ctnetlink_snat_entry_ports/3, Value)};
@@ -584,13 +591,13 @@ decode_ctnetlink_snat_entry_ports(_Family, Id, Value) ->
 %% ============================
 
 decode_ctnetlink_dnat_entry(_Family, 0, Value) ->
-    {unspec, decode_none(Value)};
+    {unspec1, decode_none(Value)};
 
 decode_ctnetlink_dnat_entry(_Family, 1, Value) ->
     {v4_dst, decode_addr(Value)};
 
 decode_ctnetlink_dnat_entry(_Family, 2, Value) ->
-    {unspec, decode_none(Value)};
+    {unspec2, decode_none(Value)};
 
 decode_ctnetlink_dnat_entry(Family, 3, Value) ->
     {dst_port, nl_dec_nla(Family, fun decode_ctnetlink_dnat_entry_ports/3, Value)};
@@ -1410,6 +1417,71 @@ decode_rtnetlink_prefix(_Family, 2, Value) ->
     decode_huint32_array(prefix_cacheinfo, Value);
 
 decode_rtnetlink_prefix(_Family, Id, Value) ->
+    {Id, Value}.
+
+%% ============================
+
+decode_rtnetlink_rule(_Family, 0, Value) ->
+    {unspec, decode_none(Value)};
+
+decode_rtnetlink_rule(_Family, 1, Value) ->
+    {dst, decode_none(Value)};
+
+decode_rtnetlink_rule(_Family, 2, Value) ->
+    {src, decode_none(Value)};
+
+decode_rtnetlink_rule(_Family, 3, Value) ->
+    {iifname, decode_string(Value)};
+
+decode_rtnetlink_rule(_Family, 4, Value) ->
+    {goto, decode_huint32(Value)};
+
+decode_rtnetlink_rule(_Family, 5, Value) ->
+    {unused2, decode_none(Value)};
+
+decode_rtnetlink_rule(_Family, 6, Value) ->
+    {priority, decode_huint32(Value)};
+
+decode_rtnetlink_rule(_Family, 7, Value) ->
+    {unused3, decode_none(Value)};
+
+decode_rtnetlink_rule(_Family, 8, Value) ->
+    {unused4, decode_none(Value)};
+
+decode_rtnetlink_rule(_Family, 9, Value) ->
+    {unused5, decode_none(Value)};
+
+decode_rtnetlink_rule(_Family, 10, Value) ->
+    {fwmark, decode_huint32(Value)};
+
+decode_rtnetlink_rule(_Family, 11, Value) ->
+    {flow, decode_huint32(Value)};
+
+decode_rtnetlink_rule(_Family, 12, Value) ->
+    {tun_id, decode_none(Value)};
+
+decode_rtnetlink_rule(_Family, 13, Value) ->
+    {supress_ifgroup, decode_huint32(Value)};
+
+decode_rtnetlink_rule(_Family, 14, Value) ->
+    {supress_prefixlen, decode_huint32(Value)};
+
+decode_rtnetlink_rule(_Family, 15, Value) ->
+    {table, decode_huint32(Value)};
+
+decode_rtnetlink_rule(_Family, 16, Value) ->
+    {fwmask, decode_huint32(Value)};
+
+decode_rtnetlink_rule(_Family, 17, Value) ->
+    {oifname, decode_string(Value)};
+
+decode_rtnetlink_rule(_Family, 18, Value) ->
+    {pad, decode_none(Value)};
+
+decode_rtnetlink_rule(_Family, 19, Value) ->
+    {l3mdev, decode_uint8(Value)};
+
+decode_rtnetlink_rule(_Family, Id, Value) ->
     {Id, Value}.
 
 %% ============================
@@ -2445,6 +2517,263 @@ decode_gtp_attrs(_Family, Id, Value) ->
 
 %% ============================
 
+decode_ipvs_cmd(0) ->
+    unspec;
+
+decode_ipvs_cmd(1) ->
+    new_service;
+
+decode_ipvs_cmd(2) ->
+    set_service;
+
+decode_ipvs_cmd(3) ->
+    del_service;
+
+decode_ipvs_cmd(4) ->
+    get_service;
+
+decode_ipvs_cmd(5) ->
+    new_dest;
+
+decode_ipvs_cmd(6) ->
+    set_dest;
+
+decode_ipvs_cmd(7) ->
+    del_dest;
+
+decode_ipvs_cmd(8) ->
+    get_dest;
+
+decode_ipvs_cmd(Value) ->
+    Value.
+
+%% ============================
+
+decode_ipvs_attrs(_Family, 0, Value) ->
+    {unspec, decode_none(Value)};
+
+decode_ipvs_attrs(Family, 1, Value) ->
+    {service, nl_dec_nla(Family, fun decode_ipvs_service_attributes/3, Value)};
+
+decode_ipvs_attrs(Family, 2, Value) ->
+    {dest, nl_dec_nla(Family, fun decode_ipvs_dest_attributes/3, Value)};
+
+decode_ipvs_attrs(Family, 3, Value) ->
+    {daemon, nl_dec_nla(Family, fun decode_ipvs_daemon_attributes/3, Value)};
+
+decode_ipvs_attrs(_Family, 4, Value) ->
+    {timeout_tcp, decode_huint32(Value)};
+
+decode_ipvs_attrs(_Family, 5, Value) ->
+    {timeout_tcp_fin, decode_huint32(Value)};
+
+decode_ipvs_attrs(_Family, 6, Value) ->
+    {timeout_udp, decode_huint32(Value)};
+
+decode_ipvs_attrs(_Family, Id, Value) ->
+    {Id, Value}.
+
+%% ============================
+
+decode_ipvs_stats64(_Family, 0, Value) ->
+    {unspec, decode_none(Value)};
+
+decode_ipvs_stats64(_Family, 1, Value) ->
+    {conns, decode_huint64(Value)};
+
+decode_ipvs_stats64(_Family, 2, Value) ->
+    {inpkts, decode_huint64(Value)};
+
+decode_ipvs_stats64(_Family, 3, Value) ->
+    {outpkts, decode_huint64(Value)};
+
+decode_ipvs_stats64(_Family, 4, Value) ->
+    {inbytes, decode_huint64(Value)};
+
+decode_ipvs_stats64(_Family, 5, Value) ->
+    {outbytes, decode_huint64(Value)};
+
+decode_ipvs_stats64(_Family, 6, Value) ->
+    {cps, decode_huint64(Value)};
+
+decode_ipvs_stats64(_Family, 7, Value) ->
+    {inpps, decode_huint64(Value)};
+
+decode_ipvs_stats64(_Family, 8, Value) ->
+    {outpps, decode_huint64(Value)};
+
+decode_ipvs_stats64(_Family, 9, Value) ->
+    {inbps, decode_huint64(Value)};
+
+decode_ipvs_stats64(_Family, 10, Value) ->
+    {outbps, decode_huint64(Value)};
+
+decode_ipvs_stats64(_Family, 11, Value) ->
+    {pad, decode_none(Value)};
+
+decode_ipvs_stats64(_Family, Id, Value) ->
+    {Id, Value}.
+
+%% ============================
+
+decode_ipvs_stats(_Family, 0, Value) ->
+    {unspec, decode_none(Value)};
+
+decode_ipvs_stats(_Family, 1, Value) ->
+    {conns, decode_huint32(Value)};
+
+decode_ipvs_stats(_Family, 2, Value) ->
+    {inpkts, decode_huint32(Value)};
+
+decode_ipvs_stats(_Family, 3, Value) ->
+    {outpkts, decode_huint32(Value)};
+
+decode_ipvs_stats(_Family, 4, Value) ->
+    {inbytes, decode_huint64(Value)};
+
+decode_ipvs_stats(_Family, 5, Value) ->
+    {outbytes, decode_huint64(Value)};
+
+decode_ipvs_stats(_Family, 6, Value) ->
+    {cps, decode_huint32(Value)};
+
+decode_ipvs_stats(_Family, 7, Value) ->
+    {inpps, decode_huint32(Value)};
+
+decode_ipvs_stats(_Family, 8, Value) ->
+    {outpps, decode_huint32(Value)};
+
+decode_ipvs_stats(_Family, 9, Value) ->
+    {inbps, decode_huint32(Value)};
+
+decode_ipvs_stats(_Family, 10, Value) ->
+    {outbps, decode_huint32(Value)};
+
+decode_ipvs_stats(_Family, 11, Value) ->
+    {pad, decode_none(Value)};
+
+decode_ipvs_stats(_Family, Id, Value) ->
+    {Id, Value}.
+
+%% ============================
+
+decode_ipvs_service_attributes(_Family, 0, Value) ->
+    {unspec, decode_none(Value)};
+
+decode_ipvs_service_attributes(_Family, 1, Value) ->
+    {address_family, decode_huint16(Value)};
+
+decode_ipvs_service_attributes(_Family, 2, Value) ->
+    {protocol, decode_huint16(Value)};
+
+decode_ipvs_service_attributes(_Family, 3, Value) ->
+    {address, decode_binary(Value)};
+
+decode_ipvs_service_attributes(_Family, 4, Value) ->
+    {port, decode_uint16(Value)};
+
+decode_ipvs_service_attributes(_Family, 5, Value) ->
+    {fwmark, decode_huint32(Value)};
+
+decode_ipvs_service_attributes(_Family, 6, Value) ->
+    {sched_name, decode_string(Value)};
+
+decode_ipvs_service_attributes(_Family, 7, Value) ->
+    decode_ipvs_service_attributes(flags, Value);
+
+decode_ipvs_service_attributes(_Family, 8, Value) ->
+    {timeout, decode_huint32(Value)};
+
+decode_ipvs_service_attributes(_Family, 9, Value) ->
+    {netmask, decode_huint32(Value)};
+
+decode_ipvs_service_attributes(Family, 10, Value) ->
+    {stats, nl_dec_nla(Family, fun decode_ipvs_stats/3, Value)};
+
+decode_ipvs_service_attributes(_Family, 11, Value) ->
+    {pe_name, decode_string(Value)};
+
+decode_ipvs_service_attributes(Family, 12, Value) ->
+    {stats64, nl_dec_nla(Family, fun decode_ipvs_stats64/3, Value)};
+
+decode_ipvs_service_attributes(_Family, Id, Value) ->
+    {Id, Value}.
+
+%% ============================
+
+decode_ipvs_dest_attributes(_Family, 0, Value) ->
+    {unspec, decode_none(Value)};
+
+decode_ipvs_dest_attributes(_Family, 1, Value) ->
+    {address, decode_binary(Value)};
+
+decode_ipvs_dest_attributes(_Family, 2, Value) ->
+    {port, decode_uint16(Value)};
+
+decode_ipvs_dest_attributes(_Family, 3, Value) ->
+    {fwd_method, decode_huint32(Value)};
+
+decode_ipvs_dest_attributes(_Family, 4, Value) ->
+    {weight, decode_huint32(Value)};
+
+decode_ipvs_dest_attributes(_Family, 5, Value) ->
+    {u_threshold, decode_huint32(Value)};
+
+decode_ipvs_dest_attributes(_Family, 6, Value) ->
+    {l_threshold, decode_huint32(Value)};
+
+decode_ipvs_dest_attributes(_Family, 7, Value) ->
+    {active_conns, decode_huint32(Value)};
+
+decode_ipvs_dest_attributes(_Family, 8, Value) ->
+    {inact_conns, decode_huint32(Value)};
+
+decode_ipvs_dest_attributes(_Family, 9, Value) ->
+    {persist_conns, decode_huint32(Value)};
+
+decode_ipvs_dest_attributes(Family, 10, Value) ->
+    {stats, nl_dec_nla(Family, fun decode_ipvs_stats/3, Value)};
+
+decode_ipvs_dest_attributes(_Family, 11, Value) ->
+    {address_family, decode_huint16(Value)};
+
+decode_ipvs_dest_attributes(Family, 12, Value) ->
+    {stats64, nl_dec_nla(Family, fun decode_ipvs_stats64/3, Value)};
+
+decode_ipvs_dest_attributes(_Family, Id, Value) ->
+    {Id, Value}.
+
+%% ============================
+
+decode_ipvs_daemon_attributes(_Family, 0, Value) ->
+    {state, decode_huint32(Value)};
+
+decode_ipvs_daemon_attributes(_Family, 1, Value) ->
+    {mcast_ifn, decode_string(Value)};
+
+decode_ipvs_daemon_attributes(_Family, 2, Value) ->
+    {sync_id, decode_huint32(Value)};
+
+decode_ipvs_daemon_attributes(_Family, 3, Value) ->
+    {sync_maxlen, decode_huint16(Value)};
+
+decode_ipvs_daemon_attributes(_Family, 4, Value) ->
+    {mcast_group, decode_huint32(Value)};
+
+decode_ipvs_daemon_attributes(_Family, 5, Value) ->
+    {mcast_group6, decode_none(Value)};
+
+decode_ipvs_daemon_attributes(_Family, 6, Value) ->
+    {mcast_port, decode_huint16(Value)};
+
+decode_ipvs_daemon_attributes(_Family, 7, Value) ->
+    {ttl, decode_uint8(Value)};
+
+decode_ipvs_daemon_attributes(_Family, Id, Value) ->
+    {Id, Value}.
+
+%% ============================
+
 encode_protocol_subsys(rtnetlink) ->
     ?NETLINK_ROUTE;
 
@@ -2903,13 +3232,13 @@ encode_ctnetlink(_Family, {Type, Value})
 
 %% ============================
 
-encode_ctnetlink_snat_entry(_Family, {unspec, Value}) ->
+encode_ctnetlink_snat_entry(_Family, {unspec1, Value}) ->
     encode_none(0, Value);
 
 encode_ctnetlink_snat_entry(_Family, {v4_src, Value}) ->
     encode_addr(1, Value);
 
-encode_ctnetlink_snat_entry(_Family, {unspec, Value}) ->
+encode_ctnetlink_snat_entry(_Family, {unspec2, Value}) ->
     encode_none(2, Value);
 
 encode_ctnetlink_snat_entry(Family, {src_port, Value}) ->
@@ -2936,13 +3265,13 @@ encode_ctnetlink_snat_entry_ports(_Family, {Type, Value})
 
 %% ============================
 
-encode_ctnetlink_dnat_entry(_Family, {unspec, Value}) ->
+encode_ctnetlink_dnat_entry(_Family, {unspec1, Value}) ->
     encode_none(0, Value);
 
 encode_ctnetlink_dnat_entry(_Family, {v4_dst, Value}) ->
     encode_addr(1, Value);
 
-encode_ctnetlink_dnat_entry(_Family, {unspec, Value}) ->
+encode_ctnetlink_dnat_entry(_Family, {unspec2, Value}) ->
     encode_none(2, Value);
 
 encode_ctnetlink_dnat_entry(Family, {dst_port, Value}) ->
@@ -3795,6 +4124,72 @@ encode_rtnetlink_prefix(_Family, Value)
     encode_huint32_array(2, Value);
 
 encode_rtnetlink_prefix(_Family, {Type, Value})
+  when is_integer(Type), is_binary(Value) ->
+    enc_nla(Type, Value).
+
+%% ============================
+
+encode_rtnetlink_rule(_Family, {unspec, Value}) ->
+    encode_none(0, Value);
+
+encode_rtnetlink_rule(_Family, {dst, Value}) ->
+    encode_none(1, Value);
+
+encode_rtnetlink_rule(_Family, {src, Value}) ->
+    encode_none(2, Value);
+
+encode_rtnetlink_rule(_Family, {iifname, Value}) ->
+    encode_string(3, Value);
+
+encode_rtnetlink_rule(_Family, {goto, Value}) ->
+    encode_huint32(4, Value);
+
+encode_rtnetlink_rule(_Family, {unused2, Value}) ->
+    encode_none(5, Value);
+
+encode_rtnetlink_rule(_Family, {priority, Value}) ->
+    encode_huint32(6, Value);
+
+encode_rtnetlink_rule(_Family, {unused3, Value}) ->
+    encode_none(7, Value);
+
+encode_rtnetlink_rule(_Family, {unused4, Value}) ->
+    encode_none(8, Value);
+
+encode_rtnetlink_rule(_Family, {unused5, Value}) ->
+    encode_none(9, Value);
+
+encode_rtnetlink_rule(_Family, {fwmark, Value}) ->
+    encode_huint32(10, Value);
+
+encode_rtnetlink_rule(_Family, {flow, Value}) ->
+    encode_huint32(11, Value);
+
+encode_rtnetlink_rule(_Family, {tun_id, Value}) ->
+    encode_none(12, Value);
+
+encode_rtnetlink_rule(_Family, {supress_ifgroup, Value}) ->
+    encode_huint32(13, Value);
+
+encode_rtnetlink_rule(_Family, {supress_prefixlen, Value}) ->
+    encode_huint32(14, Value);
+
+encode_rtnetlink_rule(_Family, {table, Value}) ->
+    encode_huint32(15, Value);
+
+encode_rtnetlink_rule(_Family, {fwmask, Value}) ->
+    encode_huint32(16, Value);
+
+encode_rtnetlink_rule(_Family, {oifname, Value}) ->
+    encode_string(17, Value);
+
+encode_rtnetlink_rule(_Family, {pad, Value}) ->
+    encode_none(18, Value);
+
+encode_rtnetlink_rule(_Family, {l3mdev, Value}) ->
+    encode_uint8(19, Value);
+
+encode_rtnetlink_rule(_Family, {Type, Value})
   when is_integer(Type), is_binary(Value) ->
     enc_nla(Type, Value).
 
@@ -4864,5 +5259,269 @@ encode_gtp_attrs(_Family, {o_tid, Value}) ->
     encode_huint32(9, Value);
 
 encode_gtp_attrs(_Family, {Type, Value})
+  when is_integer(Type), is_binary(Value) ->
+    enc_nla(Type, Value).
+
+%% ============================
+
+encode_ipvs_cmd(unspec) ->
+    0;
+
+encode_ipvs_cmd(new_service) ->
+    1;
+
+encode_ipvs_cmd(set_service) ->
+    2;
+
+encode_ipvs_cmd(del_service) ->
+    3;
+
+encode_ipvs_cmd(get_service) ->
+    4;
+
+encode_ipvs_cmd(new_dest) ->
+    5;
+
+encode_ipvs_cmd(set_dest) ->
+    6;
+
+encode_ipvs_cmd(del_dest) ->
+    7;
+
+encode_ipvs_cmd(get_dest) ->
+    8;
+
+encode_ipvs_cmd(Value) when is_integer(Value) ->
+    Value.
+
+%% ============================
+
+encode_ipvs_attrs(_Family, {unspec, Value}) ->
+    encode_none(0, Value);
+
+encode_ipvs_attrs(Family, {service, Value}) ->
+    enc_nla(1, nl_enc_nla(Family, fun encode_ipvs_service_attributes/2, Value));
+
+encode_ipvs_attrs(Family, {dest, Value}) ->
+    enc_nla(2, nl_enc_nla(Family, fun encode_ipvs_dest_attributes/2, Value));
+
+encode_ipvs_attrs(Family, {daemon, Value}) ->
+    enc_nla(3, nl_enc_nla(Family, fun encode_ipvs_daemon_attributes/2, Value));
+
+encode_ipvs_attrs(_Family, {timeout_tcp, Value}) ->
+    encode_huint32(4, Value);
+
+encode_ipvs_attrs(_Family, {timeout_tcp_fin, Value}) ->
+    encode_huint32(5, Value);
+
+encode_ipvs_attrs(_Family, {timeout_udp, Value}) ->
+    encode_huint32(6, Value);
+
+encode_ipvs_attrs(_Family, {Type, Value})
+  when is_integer(Type), is_binary(Value) ->
+    enc_nla(Type, Value).
+
+%% ============================
+
+encode_ipvs_stats64(_Family, {unspec, Value}) ->
+    encode_none(0, Value);
+
+encode_ipvs_stats64(_Family, {conns, Value}) ->
+    encode_huint64(1, Value);
+
+encode_ipvs_stats64(_Family, {inpkts, Value}) ->
+    encode_huint64(2, Value);
+
+encode_ipvs_stats64(_Family, {outpkts, Value}) ->
+    encode_huint64(3, Value);
+
+encode_ipvs_stats64(_Family, {inbytes, Value}) ->
+    encode_huint64(4, Value);
+
+encode_ipvs_stats64(_Family, {outbytes, Value}) ->
+    encode_huint64(5, Value);
+
+encode_ipvs_stats64(_Family, {cps, Value}) ->
+    encode_huint64(6, Value);
+
+encode_ipvs_stats64(_Family, {inpps, Value}) ->
+    encode_huint64(7, Value);
+
+encode_ipvs_stats64(_Family, {outpps, Value}) ->
+    encode_huint64(8, Value);
+
+encode_ipvs_stats64(_Family, {inbps, Value}) ->
+    encode_huint64(9, Value);
+
+encode_ipvs_stats64(_Family, {outbps, Value}) ->
+    encode_huint64(10, Value);
+
+encode_ipvs_stats64(_Family, {pad, Value}) ->
+    encode_none(11, Value);
+
+encode_ipvs_stats64(_Family, {Type, Value})
+  when is_integer(Type), is_binary(Value) ->
+    enc_nla(Type, Value).
+
+%% ============================
+
+encode_ipvs_stats(_Family, {unspec, Value}) ->
+    encode_none(0, Value);
+
+encode_ipvs_stats(_Family, {conns, Value}) ->
+    encode_huint32(1, Value);
+
+encode_ipvs_stats(_Family, {inpkts, Value}) ->
+    encode_huint32(2, Value);
+
+encode_ipvs_stats(_Family, {outpkts, Value}) ->
+    encode_huint32(3, Value);
+
+encode_ipvs_stats(_Family, {inbytes, Value}) ->
+    encode_huint64(4, Value);
+
+encode_ipvs_stats(_Family, {outbytes, Value}) ->
+    encode_huint64(5, Value);
+
+encode_ipvs_stats(_Family, {cps, Value}) ->
+    encode_huint32(6, Value);
+
+encode_ipvs_stats(_Family, {inpps, Value}) ->
+    encode_huint32(7, Value);
+
+encode_ipvs_stats(_Family, {outpps, Value}) ->
+    encode_huint32(8, Value);
+
+encode_ipvs_stats(_Family, {inbps, Value}) ->
+    encode_huint32(9, Value);
+
+encode_ipvs_stats(_Family, {outbps, Value}) ->
+    encode_huint32(10, Value);
+
+encode_ipvs_stats(_Family, {pad, Value}) ->
+    encode_none(11, Value);
+
+encode_ipvs_stats(_Family, {Type, Value})
+  when is_integer(Type), is_binary(Value) ->
+    enc_nla(Type, Value).
+
+%% ============================
+
+encode_ipvs_service_attributes(_Family, {unspec, Value}) ->
+    encode_none(0, Value);
+
+encode_ipvs_service_attributes(_Family, {address_family, Value}) ->
+    encode_huint16(1, Value);
+
+encode_ipvs_service_attributes(_Family, {protocol, Value}) ->
+    encode_huint16(2, Value);
+
+encode_ipvs_service_attributes(_Family, {address, Value}) ->
+    encode_binary(3, Value);
+
+encode_ipvs_service_attributes(_Family, {port, Value}) ->
+    encode_uint16(4, Value);
+
+encode_ipvs_service_attributes(_Family, {fwmark, Value}) ->
+    encode_huint32(5, Value);
+
+encode_ipvs_service_attributes(_Family, {sched_name, Value}) ->
+    encode_string(6, Value);
+
+encode_ipvs_service_attributes(_Family, Value)
+  when is_tuple(Value), element(1, Value) == flags ->
+    enc_nla(7, encode_ipvs_service_attributes(Value));
+
+encode_ipvs_service_attributes(_Family, {timeout, Value}) ->
+    encode_huint32(8, Value);
+
+encode_ipvs_service_attributes(_Family, {netmask, Value}) ->
+    encode_huint32(9, Value);
+
+encode_ipvs_service_attributes(Family, {stats, Value}) ->
+    enc_nla(10, nl_enc_nla(Family, fun encode_ipvs_stats/2, Value));
+
+encode_ipvs_service_attributes(_Family, {pe_name, Value}) ->
+    encode_string(11, Value);
+
+encode_ipvs_service_attributes(Family, {stats64, Value}) ->
+    enc_nla(12, nl_enc_nla(Family, fun encode_ipvs_stats64/2, Value));
+
+encode_ipvs_service_attributes(_Family, {Type, Value})
+  when is_integer(Type), is_binary(Value) ->
+    enc_nla(Type, Value).
+
+%% ============================
+
+encode_ipvs_dest_attributes(_Family, {unspec, Value}) ->
+    encode_none(0, Value);
+
+encode_ipvs_dest_attributes(_Family, {address, Value}) ->
+    encode_binary(1, Value);
+
+encode_ipvs_dest_attributes(_Family, {port, Value}) ->
+    encode_uint16(2, Value);
+
+encode_ipvs_dest_attributes(_Family, {fwd_method, Value}) ->
+    encode_huint32(3, Value);
+
+encode_ipvs_dest_attributes(_Family, {weight, Value}) ->
+    encode_huint32(4, Value);
+
+encode_ipvs_dest_attributes(_Family, {u_threshold, Value}) ->
+    encode_huint32(5, Value);
+
+encode_ipvs_dest_attributes(_Family, {l_threshold, Value}) ->
+    encode_huint32(6, Value);
+
+encode_ipvs_dest_attributes(_Family, {active_conns, Value}) ->
+    encode_huint32(7, Value);
+
+encode_ipvs_dest_attributes(_Family, {inact_conns, Value}) ->
+    encode_huint32(8, Value);
+
+encode_ipvs_dest_attributes(_Family, {persist_conns, Value}) ->
+    encode_huint32(9, Value);
+
+encode_ipvs_dest_attributes(Family, {stats, Value}) ->
+    enc_nla(10, nl_enc_nla(Family, fun encode_ipvs_stats/2, Value));
+
+encode_ipvs_dest_attributes(_Family, {address_family, Value}) ->
+    encode_huint16(11, Value);
+
+encode_ipvs_dest_attributes(Family, {stats64, Value}) ->
+    enc_nla(12, nl_enc_nla(Family, fun encode_ipvs_stats64/2, Value));
+
+encode_ipvs_dest_attributes(_Family, {Type, Value})
+  when is_integer(Type), is_binary(Value) ->
+    enc_nla(Type, Value).
+
+%% ============================
+
+encode_ipvs_daemon_attributes(_Family, {state, Value}) ->
+    encode_huint32(0, Value);
+
+encode_ipvs_daemon_attributes(_Family, {mcast_ifn, Value}) ->
+    encode_string(1, Value);
+
+encode_ipvs_daemon_attributes(_Family, {sync_id, Value}) ->
+    encode_huint32(2, Value);
+
+encode_ipvs_daemon_attributes(_Family, {sync_maxlen, Value}) ->
+    encode_huint16(3, Value);
+
+encode_ipvs_daemon_attributes(_Family, {mcast_group, Value}) ->
+    encode_huint32(4, Value);
+
+encode_ipvs_daemon_attributes(_Family, {mcast_group6, Value}) ->
+    encode_none(5, Value);
+
+encode_ipvs_daemon_attributes(_Family, {mcast_port, Value}) ->
+    encode_huint16(6, Value);
+
+encode_ipvs_daemon_attributes(_Family, {ttl, Value}) ->
+    encode_uint8(7, Value);
+
+encode_ipvs_daemon_attributes(_Family, {Type, Value})
   when is_integer(Type), is_binary(Value) ->
     enc_nla(Type, Value).

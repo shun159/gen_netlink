@@ -1,5 +1,7 @@
 %% Copyright (c) 2010, Travelping GmbH <info@travelping.com>
 %% All rights reserved.
+-ifndef(_GEN_NETLINK_NETLINK).
+-define(_GEN_NETLINK_NETLINK, 1).
 
 %% netlink event sources
 -define(NETLINK_ROUTE, 0).
@@ -77,7 +79,8 @@
 -type rtnetlink_addr() :: {family(),non_neg_integer(),nl_flags(),non_neg_integer(),non_neg_integer(),nla()}.
 -type rtnetlink_link() :: {family(),arphdr(),non_neg_integer(),nl_flags(),nl_flags(),nla()}.
 -type rtnetlink_prefix() :: {family(),ifindex(),non_neg_integer(),non_neg_integer(),nl_flags(),nla()}.
--type rtnetlink_msg() :: rtnetlink_neigh() | rtnetlink_route() | rtnetlink_addr() | rtnetlink_link() | rtnetlink_prefix().
+-type rtnetlink_error() :: {integer(), term()}.
+-type rtnetlink_msg() :: rtnetlink_neigh() | rtnetlink_route() | rtnetlink_addr() | rtnetlink_link() | rtnetlink_prefix() | rtnetlink_error().
 
 %% no subsystem
 -record(netlink, {
@@ -185,8 +188,26 @@
 
 -type ctnetlink_ev() :: {ctnetlink, MsgGrp :: [#ctnetlink{} | #ctnetlink_exp{}, ...]}.
                      %% netlink event message sent to `ct' subscriber
-                     %% `MsgGrp' is a single-part netlink message or a complete
+                     %% `MsgGrp' is a single-family_idrt netlink message or a complete
                      %% multipart netlink message.
 -type rtnetlink_ev() :: {rtnetlink, [#rtnetlink{}, ...]}.
                      %% netlink event message sent to `rt' subscriber
 
+
+%-define(LOG(Formatting, Args), lager:debug(Formatting, Args)).
+-define(LOG(Formatting, Args), begin _ = Formatting, _ = Args end).
+
+%-define(LOG(Formatting), lager:debug(Formatting)).
+-define(LOG(Formatting), begin _ = Formatting end).
+
+-record(getfamily, {version = 1, reserved = 0, request}).
+-record(newfamily, {version = 2, reserved = 0, request}).
+-record(get_service, {version = 0, reserved = 0, request}).
+-record(new_service, {version = 0, reserved = 0, request}).
+-record(del_service, {version = 0, reserved = 0, request}).
+-record(get_dest, {version = 0, reserved = 0, request}).
+-record(new_dest, {version = 0, reserved = 0, request}).
+-record(del_dest, {version = 0, reserved = 0, request}).
+
+
+-endif.

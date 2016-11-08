@@ -3,8 +3,7 @@
     {vsn, "0.3"},
     {modules, []},
     {registered, []},
-    {applications, [kernel, stdlib, lager, gen_socket]},
-    {mod, { gen_netlink_app, []}},
+    {applications, [kernel, stdlib, lager]},
     {env, []}
 ]}.
 
