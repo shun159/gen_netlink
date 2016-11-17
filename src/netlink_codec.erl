@@ -232,7 +232,9 @@ decode_nl_msg_type_1(queue, Type) ->
 decode_nl_msg_type_1({netlink, gtp}, _Type) ->
     gtp;
 decode_nl_msg_type_1({netlink, ipvs}, _Type) ->
-    ipvs.
+    ipvs;
+decode_nl_msg_type_1({netlink, tcp_metrics}, _Type) ->
+    tcp_metrics.
 
 decode_rtnetlink_rtm_flags(Flags) ->
     decode_flag(flag_info_rtnetlink_rtm_flags(), Flags).
@@ -274,6 +276,8 @@ encode_nl_msg(generic, netlink, Type) ->
 encode_nl_msg(_Protocol, rtnetlink, Type) ->
     encode_rtm_msgtype_rtnetlink(Type);
 encode_nl_msg(Protocol, netlink, ipvs) ->
+    Protocol;
+encode_nl_msg(Protocol, netlink, tcp_metrics) ->
     Protocol;
 encode_nl_msg(Protocol, netlink, gtp) ->
     Protocol;
@@ -666,6 +670,12 @@ nl_enc_payload({netlink, _GenlType}, ipvs, {IPVSCmd, Version, ResId, Req}) ->
     Cmd = encode_ipvs_cmd(IPVSCmd),
     Data = nl_enc_nla(IPVSCmd, fun encode_ipvs_attrs/2, Req),
     <<Cmd:8, Version:8, ResId:16/native-integer, Data/binary>>;
+
+nl_enc_payload({netlink, _GenlType}, tcp_metrics, {TCPMCmd, Version, ResId, Req}) ->
+    Cmd = encode_tcp_metrics_cmd(TCPMCmd),
+    Data = nl_enc_nla(Cmd, fun encode_tcp_metrics_attrs/2, Req),
+    <<Cmd:8, Version:8, ResId:16/native-integer, Data/binary>>;
+
 %% Other
 nl_enc_payload(_, _, Data)
     when is_binary(Data) ->
@@ -747,7 +757,9 @@ nl_dec_payload({netlink, gtp}, _MsgType, << Cmd:8, Version:8, ResId:16/native-in
 nl_dec_payload({netlink, ipvs}, _MsgType, << Cmd:8, Version:8, ResId:16/native-integer, Data/binary >>) ->
     IPVSCmd = decode_ipvs_cmd(Cmd),
     { IPVSCmd, Version, ResId, nl_dec_nla(IPVSCmd, fun decode_ipvs_attrs/3, Data) };
-%% Other
+nl_dec_payload({netlink, tcp_metrics}, _MsgType, << Cmd:8, Version:8, ResId:16/native-integer, Data/binary >>) ->
+    TCPMCmd = decode_tcp_metrics_cmd(Cmd),
+    { TCPMCmd, Version, ResId, nl_dec_nla(TCPMCmd, fun decode_tcp_metrics_attrs/3, Data) };
 nl_dec_payload(_SubSys, _MsgType, Data) ->
     io:format("unknown SubSys/MsgType: ~p/~p~n", [_SubSys, _MsgType]),
     lager:warning("unknown SubSys/MsgType: ~p/~p", [_SubSys, _MsgType]),

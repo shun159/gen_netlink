@@ -950,7 +950,7 @@ define_consts() ->
             {o_tid, huint32}
         ]},
 
-        {{ipvs, cmd}, [unspec, new_service, set_service, del_service, get_service, new_dest, set_dest, del_dest, get_dest]},
+        {{ipvs, cmd}, [unspec, new_service, set_service, del_service, get_service, new_dest, set_dest, del_dest, get_dest, new_daemon, del_daemon, get_daemon, set_timeout, get_timeout]},
 
         {{ipvs, attrs}, [
             {unspec, none},
@@ -1031,6 +1031,33 @@ define_consts() ->
             {mcast_group6, none},
             {mcast_port, huint16},
             {ttl, uint8}
+        ]},
+        {{tcp_metrics, cmd}, [unspec, get]},
+        {{tcp_metrics, attrs}, [
+            {unspec, none},
+            {d_addr, addr},
+            {d_addr_v6, binary},
+            {age_ms, huint64},
+            {tw_tsval, huint32},
+            {tw_ts_stamp_sec, huint32},
+            {vals, {nested, {tcp_metrics, vals}}},
+            {fopen_mss, huint16},
+            {fopen_syn_drops, huint16},
+            {fopen_syn_drops_ts_ms, huint64},
+            {fopen_cookie, binary},
+            {s_addr, addr},
+            {s_addr_v6, binary},
+            {pad, none} 
+        ]},
+        {{tcp_metrics, vals}, [
+            {unspec, none},
+            {rtt_ms, huint32},
+            {rtt_var_ms, huint32},
+            {ss_thresh, huint32},
+            {cwnd, huint32},
+            {reordering, huint32},
+            {rtt_us, huint32},
+            {rtt_var_us, huint32}
         ]}
     ].
 
