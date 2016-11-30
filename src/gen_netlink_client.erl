@@ -29,7 +29,7 @@
 
 %% API
 -export([start_link/0, start_link/1]).
--export([request/5, request/4, get_family/2, rtnl_request/3, rtnl_request/4]).
+-export([request/5, request/4, get_family/2, rtnl_request/3, rtnl_request/4, if_nametoindex/1]).
 
 %% gen_statem behaviour
 -export([init/1, terminate/3, code_change/4, callback_mode/0]).
@@ -74,6 +74,10 @@ get_family(Pid, FamilyName) ->
 
 family_name_to_friendly("IPVS") ->
     ipvs.
+
+if_nametoindex(Ifname) ->
+    {ok, Fd} = packet:socket(),
+    packet:ifindex(Fd, Ifname).
 
 start_link() ->
     gen_statem:start_link(?MODULE, [?NETLINK_GENERIC], []).
