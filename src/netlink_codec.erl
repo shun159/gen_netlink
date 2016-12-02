@@ -531,10 +531,18 @@ nl_dec_nla(Family, Fun, << Len:16/native-integer, NlaType:16/native-integer, Res
     Padding = pad_len(4, PayLoadLen),
     {Next, NLA} =
         case Rest of
-            << Data:PayLoadLen/bytes, _Pad:Padding/bytes, Next0/binary >> ->
+            << Data:PayLoadLen/bytes, _Pad:Padding/bytes, Next0/binary >> when is_function(Fun, 4) ->
+                {Next0, Fun(Family, NlaType band 16#7FFF, Data, Acc)};
+
+            << Data:PayLoadLen/bytes, _Pad:Padding/bytes, Next0/binary >> when is_function(Fun, 3) ->
                 {Next0, Fun(Family, NlaType band 16#7FFF, Data)};
 
-            Data when PayLoadLen == size(Data) ->
+            Data when PayLoadLen == size(Data) andalso is_function(Fun, 4) ->
+                %% NFQ does not allign the last NLA when it is NFQA_PAYLOAD
+                %% accept unaligned attributes when they are the last one
+                {<<>>, Fun(Family, NlaType band 16#7FFF, Data, Acc)};
+
+            Data when PayLoadLen == size(Data) andalso is_function(Fun, 3) ->
                 %% NFQ does not allign the last NLA when it is NFQA_PAYLOAD
                 %% accept unaligned attributes when they are the last one
                 {<<>>, Fun(Family, NlaType band 16#7FFF, Data)};
@@ -547,19 +555,22 @@ nl_dec_nla(Family, Fun, << Len:16/native-integer, NlaType:16/native-integer, Res
 nl_dec_nla(_Family, _Fun, << >>, Acc) ->
     lists:reverse(Acc).
 
-nl_dec_nla(Family, Fun, Data)
-    when is_function(Fun, 3) ->
+nl_dec_nla(Family, Fun, Data) ->
     nl_dec_nla(Family, Fun, Data, []).
 
-nl_enc_nla(_Family, _Fun, [], Acc) ->
+nl_enc_nla(_Family, _Fun, [], _Context, Acc) ->
     list_to_binary(lists:reverse(Acc));
-nl_enc_nla(Family, Fun, [Head|Rest], Acc) ->
+nl_enc_nla(Family, Fun, [Head|Rest], Context, Acc) when is_function(Fun, 2) ->
 %    lager:debug("nl_enc_nla: ~w, ~w~n", [Family, Head]),
     H = Fun(Family, Head),
-    nl_enc_nla(Family, Fun, Rest, [H|Acc]).
+    nl_enc_nla(Family, Fun, Rest, Context, [H|Acc]);
+nl_enc_nla(Family, Fun, [Head|Rest], Context, Acc) when is_function(Fun, 3) ->
+%    lager:debug("nl_enc_nla: ~w, ~w~n", [Family, Head]),
+    H = Fun(Family, Head, Context),
+    nl_enc_nla(Family, Fun, Rest, [Head|Context], [H|Acc]).
 
-nl_enc_nla(Family, Fun, Req) when is_function(Fun, 2) ->
-    nl_enc_nla(Family, Fun, Req, []).
+nl_enc_nla(Family, Fun, Req)  ->
+    nl_enc_nla(Family, Fun, Req, [], []).
 
 nl_enc_payload(ctnetlink, _MsgType, {Family, Version, ResId, Req}) ->
     Fam = family(Family),
