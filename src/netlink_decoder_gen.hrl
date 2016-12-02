@@ -1370,8 +1370,8 @@ decode_rtnetlink_link_linkinfo(_Family, 0, Value) ->
 decode_rtnetlink_link_linkinfo(_Family, 1, Value) ->
     {kind, decode_string(Value)};
 
-decode_rtnetlink_link_linkinfo(_Family, 2, Value) ->
-    {data, decode_binary(Value)};
+decode_rtnetlink_link_linkinfo(Family, 2, Value) ->
+    {data, nl_dec_nla(Family, fun decode_rtnetlink_link_linkinfo_data/3, Value)};
 
 decode_rtnetlink_link_linkinfo(_Family, 3, Value) ->
     {xstats, decode_binary(Value)};
@@ -1379,6 +1379,80 @@ decode_rtnetlink_link_linkinfo(_Family, 3, Value) ->
 decode_rtnetlink_link_linkinfo(_Family, Id, Value) ->
     {Id, Value}.
 
+%% ============================
+
+decode_rtnetlink_link_linkinfo_data(_Family, 0, Value) ->
+    {unspec, decode_none(Value)};
+
+decode_rtnetlink_link_linkinfo_data(_Family, 1, Value) ->
+    {id, decode_uint32(Value)};
+
+decode_rtnetlink_link_linkinfo_data(_Family, 2, Value) ->
+    {group, decode_huint32(Value)};
+
+decode_rtnetlink_link_linkinfo_data(_Family, 3, Value) ->
+    {link, decode_uint32(Value)};
+
+decode_rtnetlink_link_linkinfo_data(_Family, 4, Value) ->
+    {local, decode_huint32(Value)};
+
+decode_rtnetlink_link_linkinfo_data(_Family, 5, Value) ->
+    {ttl, decode_uint8(Value)};
+
+decode_rtnetlink_link_linkinfo_data(_Family, 6, Value) ->
+    {tos, decode_uint8(Value)};
+
+decode_rtnetlink_link_linkinfo_data(_Family, 7, Value) ->
+    {learning, decode_uint8(Value)};
+
+decode_rtnetlink_link_linkinfo_data(_Family, 8, Value) ->
+    {ageing, decode_uint32(Value)};
+
+decode_rtnetlink_link_linkinfo_data(_Family, 9, Value) ->
+    {limit, decode_uint32(Value)};
+
+decode_rtnetlink_link_linkinfo_data(_Family, 10, Value) ->
+    {port_range, decode_none(Value)};
+
+decode_rtnetlink_link_linkinfo_data(_Family, 11, Value) ->
+    {proxy, decode_uint8(Value)};
+
+decode_rtnetlink_link_linkinfo_data(_Family, 12, Value) ->
+    {rsc, decode_uint8(Value)};
+
+decode_rtnetlink_link_linkinfo_data(_Family, 13, Value) ->
+    {l2miss, decode_uint8(Value)};
+
+decode_rtnetlink_link_linkinfo_data(_Family, 14, Value) ->
+    {l3miss, decode_uint8(Value)};
+
+decode_rtnetlink_link_linkinfo_data(_Family, 15, Value) ->
+    {port, decode_huint16(Value)};
+
+decode_rtnetlink_link_linkinfo_data(_Family, 16, Value) ->
+    {group6, decode_none(Value)};
+
+decode_rtnetlink_link_linkinfo_data(_Family, 17, Value) ->
+    {local6, decode_none(Value)};
+
+decode_rtnetlink_link_linkinfo_data(_Family, 18, Value) ->
+    {udp_csum, decode_uint8(Value)};
+
+decode_rtnetlink_link_linkinfo_data(_Family, 19, Value) ->
+    {udp_zero_csum6_tx, decode_uint8(Value)};
+
+decode_rtnetlink_link_linkinfo_data(_Family, 20, Value) ->
+    {udp_zero_csum6_rx, decode_uint8(Value)};
+
+decode_rtnetlink_link_linkinfo_data(_Family, 21, Value) ->
+    {remcsum_tx, decode_uint8(Value)}; 
+ 
+decode_rtnetlink_link_linkinfo_data(_Family, 22, Value) ->
+    {remcsum_rx, decode_uint8(Value)};
+
+decode_rtnetlink_link_linkinfo_data(_Family, Id, Value) ->
+   {Id, Value}.
+    
 %% ============================
 
 decode_rtnetlink_link_protinfo_inet6(_Family, 0, Value) ->
@@ -4172,8 +4246,8 @@ encode_rtnetlink_link_linkinfo(_Family, {unspec, Value}) ->
 encode_rtnetlink_link_linkinfo(_Family, {kind, Value}) ->
     encode_string(1, Value);
 
-encode_rtnetlink_link_linkinfo(_Family, {data, Value}) ->
-    encode_binary(2, Value);
+encode_rtnetlink_link_linkinfo(Family, {data, Value}) ->
+    enc_nla(2, nl_enc_nla(Family, fun encode_rtnetlink_link_linkinfo_data/2, Value));
 
 encode_rtnetlink_link_linkinfo(_Family, {xstats, Value}) ->
     encode_binary(3, Value);
@@ -4183,6 +4257,81 @@ encode_rtnetlink_link_linkinfo(_Family, {Type, Value})
     enc_nla(Type, Value).
 
 %% ============================
+
+encode_rtnetlink_link_linkinfo_data(_Family, {unspec, Value}) ->
+    encode_none(0, Value);
+
+encode_rtnetlink_link_linkinfo_data(_Family, {id, Value}) ->
+    encode_uint32(1, Value);
+
+encode_rtnetlink_link_linkinfo_data(_Family, {group, Value}) ->
+    encode_huint32(2, Value);
+
+encode_rtnetlink_link_linkinfo_data(_Family, {link, Value}) ->
+    encode_uint32(3, Value);
+
+encode_rtnetlink_link_linkinfo_data(_Family, {local, Value}) ->
+    encode_huint32(4, Value);
+
+encode_rtnetlink_link_linkinfo_data(_Family, {ttl, Value}) ->
+    encode_uint8(5, Value);
+
+encode_rtnetlink_link_linkinfo_data(_Family, {tos, Value}) ->
+    encode_uint8(6, Value);
+
+encode_rtnetlink_link_linkinfo_data(_Family, {learning, Value}) ->
+    encode_uint8(7, Value);
+
+encode_rtnetlink_link_linkinfo_data(_Family, {ageing, Value}) ->
+    encode_uint32(8, Value);
+
+encode_rtnetlink_link_linkinfo_data(_Family, {limit, Value}) ->
+    encode_uint32(9, Value);
+
+encode_rtnetlink_link_linkinfo_data(_Family, {port_range, Value}) ->
+    encode_none(10, Value);
+
+encode_rtnetlink_link_linkinfo_data(_Family, {proxy, Value}) ->
+    encode_uint8(11, Value);
+
+encode_rtnetlink_link_linkinfo_data(_Family, {rsc, Value}) ->
+    encode_uint8(12, Value);
+
+encode_rtnetlink_link_linkinfo_data(_Family, {l2miss, Value}) ->
+    encode_uint8(13, Value);
+
+encode_rtnetlink_link_linkinfo_data(_Family, {l3miss, Value}) ->
+    encode_uint8(14, Value);
+
+encode_rtnetlink_link_linkinfo_data(_Family, {port, Value}) ->
+    encode_huint16(15, Value);
+
+encode_rtnetlink_link_linkinfo_data(_Family, {group6, Value}) ->
+    encode_none(16, Value);
+
+encode_rtnetlink_link_linkinfo_data(_Family, {local6, Value}) ->
+    encode_none(17, Value);
+
+encode_rtnetlink_link_linkinfo_data(_Family, {udp_csum, Value}) ->
+    encode_uint8(18, Value);
+
+encode_rtnetlink_link_linkinfo_data(_Family, {udp_zero_csum6_tx, Value}) ->
+    encode_uint8(19, Value);
+
+encode_rtnetlink_link_linkinfo_data(_Family, {udp_zero_csum6_rx, Value}) ->
+    encode_uint8(20, Value);
+
+encode_rtnetlink_link_linkinfo_data(_Family, {remcsum_tx, Value}) ->
+    encode_uint8(21, Value);
+
+encode_rtnetlink_link_linkinfo_data(_Family, {remcsum_rx, Value}) ->
+    encode_uint8(22, Value);
+
+encode_rtnetlink_link_linkinfo_data(_Family, {Type, Value}) 
+   when is_integer(Type), is_binary(Value) ->
+       enc_nla(Type, Value).
+
+%% ======================================
 
 encode_rtnetlink_link_protinfo_inet6(_Family, {unspec, Value}) ->
     encode_none(0, Value);
