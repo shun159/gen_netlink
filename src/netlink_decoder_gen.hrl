@@ -1130,6 +1130,15 @@ decode_rtnetlink_route(_Family, 14, Value) ->
 decode_rtnetlink_route(_Family, 15, Value) ->
     {table, decode_huint32(Value)};
 
+decode_rtnetlink_route(_Family, 16, Value) ->
+    {mark, decode_uint32(Value)};
+
+decode_rtnetlink_route(_Family, 17, Value) ->
+    {mfc_stats, decode_none(Value)};
+
+decode_rtnetlink_route(_Family, 18, Value) ->
+    {via, decode_addr(Value)};
+
 decode_rtnetlink_route(_Family, Id, Value) ->
     {Id, Value}.
 
@@ -4004,6 +4013,15 @@ encode_rtnetlink_route(_Family, {mp_algo, Value}) ->
 
 encode_rtnetlink_route(_Family, {table, Value}) ->
     encode_huint32(15, Value);
+
+encode_rtnetlink_route(_Family, {mark, Value}) ->
+    encode_uint32(16, Value);
+
+encode_rtnetlink_route(_Family, {mfc_stats, Value}) ->
+    encode_none(17, Value);
+
+encode_rtnetlink_route(_Family, {via, Value}) ->
+    encode_addr(18, Value); 
 
 encode_rtnetlink_route(_Family, {Type, Value})
   when is_integer(Type), is_binary(Value) ->
