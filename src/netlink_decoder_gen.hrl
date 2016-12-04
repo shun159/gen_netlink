@@ -1400,16 +1400,16 @@ decode_rtnetlink_link_linkinfo_vxlan(_Family, 0, Value) ->
     {unspec, decode_none(Value)};
 
 decode_rtnetlink_link_linkinfo_vxlan(_Family, 1, Value) ->
-    {id, decode_uint32(Value)};
+    {id, decode_huint32(Value)};
 
 decode_rtnetlink_link_linkinfo_vxlan(_Family, 2, Value) ->
-    {group, decode_huint32(Value)};
+    {group, decode_uint32(Value)};
 
 decode_rtnetlink_link_linkinfo_vxlan(_Family, 3, Value) ->
-    {link, decode_uint32(Value)};
+    {link, decode_huint32(Value)};
 
 decode_rtnetlink_link_linkinfo_vxlan(_Family, 4, Value) ->
-    {local, decode_huint32(Value)};
+    {local, decode_uint32(Value)};
 
 decode_rtnetlink_link_linkinfo_vxlan(_Family, 5, Value) ->
     {ttl, decode_uint8(Value)};
@@ -1421,10 +1421,10 @@ decode_rtnetlink_link_linkinfo_vxlan(_Family, 7, Value) ->
     {learning, decode_uint8(Value)};
 
 decode_rtnetlink_link_linkinfo_vxlan(_Family, 8, Value) ->
-    {ageing, decode_uint32(Value)};
+    {ageing, decode_huint32(Value)};
 
 decode_rtnetlink_link_linkinfo_vxlan(_Family, 9, Value) ->
-    {limit, decode_uint32(Value)};
+    {limit, decode_huint32(Value)};
 
 decode_rtnetlink_link_linkinfo_vxlan(_Family, 10, Value) ->
     {port_range, decode_none(Value)};
@@ -1442,7 +1442,7 @@ decode_rtnetlink_link_linkinfo_vxlan(_Family, 14, Value) ->
     {l3miss, decode_uint8(Value)};
 
 decode_rtnetlink_link_linkinfo_vxlan(_Family, 15, Value) ->
-    {port, decode_huint16(Value)};
+    {port, decode_uint16(Value)};
 
 decode_rtnetlink_link_linkinfo_vxlan(_Family, 16, Value) ->
     {group6, decode_none(Value)};
@@ -1514,10 +1514,10 @@ decode_rtnetlink_rule(_Family, 0, Value) ->
     {unspec, decode_none(Value)};
 
 decode_rtnetlink_rule(_Family, 1, Value) ->
-    {dst, decode_none(Value)};
+    {dst, decode_addr(Value)};
 
 decode_rtnetlink_rule(_Family, 2, Value) ->
-    {src, decode_none(Value)};
+    {src, decode_addr(Value)};
 
 decode_rtnetlink_rule(_Family, 3, Value) ->
     {iifname, decode_string(Value)};
@@ -4292,16 +4292,16 @@ encode_rtnetlink_link_linkinfo_vxlan(_Family, {unspec, Value}) ->
     encode_none(0, Value);
 
 encode_rtnetlink_link_linkinfo_vxlan(_Family, {id, Value}) ->
-    encode_uint32(1, Value);
+    encode_huint32(1, Value);
 
 encode_rtnetlink_link_linkinfo_vxlan(_Family, {group, Value}) ->
-    encode_huint32(2, Value);
+    encode_uint32(2, Value);
 
 encode_rtnetlink_link_linkinfo_vxlan(_Family, {link, Value}) ->
-    encode_uint32(3, Value);
+    encode_huint32(3, Value);
 
 encode_rtnetlink_link_linkinfo_vxlan(_Family, {local, Value}) ->
-    encode_huint32(4, Value);
+    encode_uint32(4, Value);
 
 encode_rtnetlink_link_linkinfo_vxlan(_Family, {ttl, Value}) ->
     encode_uint8(5, Value);
@@ -4313,10 +4313,10 @@ encode_rtnetlink_link_linkinfo_vxlan(_Family, {learning, Value}) ->
     encode_uint8(7, Value);
 
 encode_rtnetlink_link_linkinfo_vxlan(_Family, {ageing, Value}) ->
-    encode_uint32(8, Value);
+    encode_huint32(8, Value);
 
 encode_rtnetlink_link_linkinfo_vxlan(_Family, {limit, Value}) ->
-    encode_uint32(9, Value);
+    encode_huint32(9, Value);
 
 encode_rtnetlink_link_linkinfo_vxlan(_Family, {port_range, Value}) ->
     encode_none(10, Value);
@@ -4334,7 +4334,7 @@ encode_rtnetlink_link_linkinfo_vxlan(_Family, {l3miss, Value}) ->
     encode_uint8(14, Value);
 
 encode_rtnetlink_link_linkinfo_vxlan(_Family, {port, Value}) ->
-    encode_huint16(15, Value);
+    encode_uint16(15, Value);
 
 encode_rtnetlink_link_linkinfo_vxlan(_Family, {group6, Value}) ->
     encode_none(16, Value);
@@ -4414,10 +4414,10 @@ encode_rtnetlink_rule(_Family, {unspec, Value}) ->
     encode_none(0, Value);
 
 encode_rtnetlink_rule(_Family, {dst, Value}) ->
-    encode_none(1, Value);
+    encode_addr(1, Value);
 
 encode_rtnetlink_rule(_Family, {src, Value}) ->
-    encode_none(2, Value);
+    encode_addr(2, Value);
 
 encode_rtnetlink_rule(_Family, {iifname, Value}) ->
     encode_string(3, Value);
