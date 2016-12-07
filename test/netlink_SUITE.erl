@@ -104,6 +104,14 @@ rt_linkinfo_1() ->
       0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,40,0,18,0,9,0,1,0,118,108,97,110,0,
       0,0,0,24,0,2,0,6,0,1,0,4,0,0,0,12,0,2,0,1,0,0,0,255,255,255,255>>.
 
+rt_linkinfo_vxlan() ->
+    <<180,0,0,0,16,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,13,0,3,
+      0,118,116,101,112,49,48,50,52,0,0,0,0,132,0,18,0,10,0,1,0,118,120,108,97,
+      110,0,0,0,116,0,2,0,8,0,1,0,0,4,0,0,5,0,5,0,0,0,0,0,5,0,6,0,0,0,0,0,5,0,7,
+      0,1,0,0,0,5,0,11,0,0,0,0,0,5,0,12,0,0,0,0,0,5,0,13,0,0,0,0,0,5,0,14,0,0,0,
+      0,0,5,0,18,0,0,0,0,0,5,0,19,0,0,0,0,0,5,0,20,0,0,0,0,0,5,0,21,0,0,0,0,0,5,
+      0,22,0,0,0,0,0,6,0,15,0,250,0,0,0>>.
+
 rt_linkinfo_complex() ->
     <<172,1,0,0,16,0,2,0,0,0,0,0,0,0,255,255,0,0,4,3,1,0,0,0,
       73,0,1,0,0,0,0,0,7,0,3,0,108,111,0,0,8,0,13,0,0,0,0,0,5,0,16,0,0,0,0,0,5,
@@ -490,6 +498,11 @@ test_rt_linkinfo_1(_Config) ->
     Msg = netlink_codec:nl_rt_enc(netlink_codec:nl_rt_dec(Msg)),
     ok.
 
+test_rt_linkinfo_vxlan(_Config) ->
+    Msg = rt_linkinfo_vxlan(),
+    Msg = netlink_codec:nl_rt_enc(netlink_codec:nl_rt_dec(Msg)),
+    ok.
+
 test_rt_linkinfo_complex(_Config) ->
     Msg = rt_linkinfo_complex(),
     Msg = netlink_codec:nl_rt_enc(netlink_codec:nl_rt_dec(Msg)),
@@ -570,7 +583,7 @@ all() ->
      test_rt_newneigh_1, test_rt_newneigh_2, test_rt_delroute,
      test_rt_newprefix,
      test_rt_newlink_1, test_rt_newlink_2,
-     test_rt_linkinfo_1, test_rt_linkinfo_complex,
+     test_rt_linkinfo_1, test_rt_linkinfo_vxlan, test_rt_linkinfo_complex,
      test_nfq_unbind, test_nfq_bind_queue,
      test_nfq_bind_socket, test_nfq_set_copy_mode,
      test_nfq_set_verdict,
