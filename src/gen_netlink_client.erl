@@ -40,6 +40,8 @@
 -record(request, {family, cmd, flags, msg}).
 -record(rtnl_request, {type, flags, msg}).
 
+-define(INVALID_IFINDEX, -1).
+
 -type response_message() :: term().
 -type response_messages() :: [response_message()].
 
@@ -77,7 +79,15 @@ family_name_to_friendly("IPVS") ->
 
 if_nametoindex(Ifname) ->
     {ok, Fd} = packet:socket(),
-    packet:ifindex(Fd, Ifname).
+    try packet:ifindex(Fd, Ifname) of
+        Ifindex -> Ifindex
+    catch 
+        _:Reason ->
+            lager:warning("Couldn't fetch index for interface ~p due to ~p~n", [Ifname, Reason]),
+            ?INVALID_IFINDEX 
+    after
+        procket:close(Fd)
+    end.
 
 start_link() ->
     gen_statem:start_link(?MODULE, [?NETLINK_GENERIC], []).
