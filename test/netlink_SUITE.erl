@@ -578,6 +578,15 @@ test_tcp_metrics_get_rsp_dec(_Config) ->
                     {cwnd,10}]}],
     [{netlink,tcp_metrics, [multi], 18,31595, {get,1,0,Attrs}} | _Rest] = Data.
 
+test_if_nametoindex(_Config) ->
+    {ok, FdList0} = file:list_dir("/proc/self/fd"),
+    {ok, 1} = gen_netlink_client:if_nametoindex("lo"),
+    {ok, FdList0} = file:list_dir("/proc/self/fd"),
+    {error, _} = gen_netlink_client:if_nametoindex("badifname_over_13_chars"),
+    {error, _} = gen_netlink_client:if_nametoindex("not_an_if"),
+    {ok, FdList0} = file:list_dir("/proc/self/fd").
+
+
 all() ->
     [test_conntrack_new,
      test_rt_newneigh_1, test_rt_newneigh_2, test_rt_delroute,
@@ -589,7 +598,8 @@ all() ->
      test_nfq_set_verdict,
      test_nft_requests,
      test_genl, test_ipvs,
-     test_tcp_metrics_get_enc, test_tcp_metrics_get_rsp_dec
+     test_tcp_metrics_get_enc, test_tcp_metrics_get_rsp_dec,
+     test_if_nametoindex
     ].
 
 init_per_suite(Config) ->

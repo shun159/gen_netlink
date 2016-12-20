@@ -75,9 +75,18 @@ get_family(Pid, FamilyName) ->
 family_name_to_friendly("IPVS") ->
     ipvs.
 
+-spec(if_nametoindex(string()) -> {ok, non_neg_integer()} | {error, term()}).
 if_nametoindex(Ifname) ->
     {ok, Fd} = packet:socket(),
-    packet:ifindex(Fd, Ifname).
+    try packet:ifindex(Fd, Ifname) of
+        Idx when is_integer(Idx) andalso Idx >= 0 ->
+            {ok, Idx}
+    catch 
+        Exception:Reason ->
+            {error, {Exception, Reason}}
+    after
+        procket:close(Fd)
+    end.
 
 start_link() ->
     gen_statem:start_link(?MODULE, [?NETLINK_GENERIC], []).
