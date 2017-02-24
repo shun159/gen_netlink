@@ -546,6 +546,10 @@ test_genl(_Config) ->
     Msg = netlink_codec:nl_enc(?NETLINK_GENERIC, netlink_codec:nl_dec(?NETLINK_GENERIC, Msg)),
     ok.
 
+test_error_code(_Config) ->
+     Msg =  netlink_codec:nl_enc(0, {netlink, 0, 0, 0, [{error, -17}]}),
+    {error, -17} = netlink_codec:nl_dec(0, Msg).
+
 test_ipvs(_Config) ->
     {EncodedMsg, DecodedMsg} = ipvs_metrics(),
     DecodedMsg = netlink_codec:nl_dec(ipvs, EncodedMsg),
@@ -588,7 +592,7 @@ test_if_nametoindex(_Config) ->
 
 
 all() ->
-    [test_conntrack_new,
+    [test_error_code, test_conntrack_new,
      test_rt_newneigh_1, test_rt_newneigh_2, test_rt_delroute,
      test_rt_newprefix,
      test_rt_newlink_1, test_rt_newlink_2,
