@@ -28,7 +28,7 @@
 -type state_name() :: idle | wait_for_responses.
 
 %% API
--export([start_link/0, start_link/1]).
+-export([start_link/0, start_link/1, start_link/2, start_link/3, stop/1]).
 -export([request/5, request/4, get_family/2, rtnl_request/3, rtnl_request/4, if_nametoindex/1]).
 
 %% gen_statem behaviour
@@ -59,6 +59,9 @@ rtnl_request(Pid, Type, Msg) ->
     rtnl_request(Pid, Type, [], Msg).
 rtnl_request(Pid, Type, Flags, Msg) ->
     gen_statem:call(Pid, #rtnl_request{type = Type, flags = Flags, msg = Msg}, 5000).
+
+stop(Pid) ->
+    gen_statem:stop(Pid). 
 
 -spec(get_family(Pid :: pid(), FamilyName :: string()) -> error | {ok, family2()}).
 get_family(Pid, FamilyName) ->
@@ -94,7 +97,26 @@ start_link() ->
 start_link(FamilyID) ->
     gen_statem:start_link(?MODULE, [FamilyID], []).
 
--spec(init([FamilyID :: non_neg_integer()]) -> {ok, state_name(), state_data()}).
+start_link(netns, Netns) ->
+    gen_statem:start_link(?MODULE, [{netns, ?NETLINK_GENERIC, Netns}], []).
+
+start_link(netns, FamilyID, Netns) ->
+    gen_statem:start_link(?MODULE, [{netns, FamilyID, Netns}], []).
+
+-spec(init([FamilyID :: non_neg_integer() | {netns, FamilyID :: non_neg_integer(), Netns :: string()}]) ->
+    {ok, state_name(), state_data()}).
+init([{netns, FamilyID, Netns}]) ->
+    Pid = list_to_integer(os:getpid()),
+    ProcketBin = filename:join(code:priv_dir(procket), procket),
+    Opts = [{family, netlink},
+            {protocol, FamilyID},
+            {type,dgram},
+            {progname, "nsenter -n" ++ Netns ++ " " ++ ProcketBin}],
+    {ok, Fd} = procket:open(0, Opts),
+    Port = erlang:open_port({fd, Fd, Fd}, [binary]),
+    spawn_watch(Port, Fd),
+    State = #state{fd = Fd, port = Port, pid = Pid, family = FamilyID},
+    {ok, idle, State};
 init([FamilyID]) ->
     Pid = list_to_integer(os:getpid()),
     {ok, Fd} = procket:socket(netlink, dgram, FamilyID),
@@ -102,7 +124,6 @@ init([FamilyID]) ->
     spawn_watch(Port, Fd),
     State = #state{fd = Fd, port = Port, pid = Pid, family = FamilyID},
     {ok, idle, State}.
-
 
 idle({call, From}, #rtnl_request{type = Type, flags = Flags0, msg = Msg},
     State0 = #state{port = Port, pid = Pid, seq = Seq0, family = Family}) ->
@@ -176,7 +197,7 @@ do_reply(#netlink{type = error, msg = {Error, _Payload}}, #state{last_rq_from = 
     gen_statem:reply(From, {error, Error, Replies1});
 do_reply(#rtnetlink{type = done}, #state{last_rq_from = From, replies = Replies0}) ->
     Replies1 = lists:reverse(Replies0),
-gen_statem:reply(From, {ok, Replies1});
+    gen_statem:reply(From, {ok, Replies1});
 do_reply(#rtnetlink{type = error, msg = {_Error = 0, _Payload}}, #state{last_rq_from = From, replies = Replies0}) ->
     Replies1 = lists:reverse(Replies0),
     gen_statem:reply(From, {ok, Replies1});
