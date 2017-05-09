@@ -11,6 +11,7 @@
 
 -behavior(gen_statem).
 -include_lib("gen_netlink/include/netlink.hrl").
+-include_lib("procket/include/packet.hrl").
 
 -record(state, {
     port                :: port(),
@@ -29,7 +30,7 @@
 
 %% API
 -export([start_link/0, start_link/1, start_link/2, start_link/3, stop/1]).
--export([request/5, request/4, get_family/2, rtnl_request/3, rtnl_request/4, if_nametoindex/1]).
+-export([request/5, request/4, get_family/2, rtnl_request/3, rtnl_request/4, if_nametoindex/1, if_nametoindex/2]).
 
 %% gen_statem behaviour
 -export([init/1, terminate/3, code_change/4, callback_mode/0]).
@@ -39,6 +40,8 @@
 
 -record(request, {family, cmd, flags, msg}).
 -record(rtnl_request, {type, flags, msg}).
+
+-define(PROCKETBIN, filename:join(code:priv_dir(procket), procket)). 
 
 -type response_message() :: term().
 -type response_messages() :: [response_message()].
@@ -80,7 +83,16 @@ family_name_to_friendly("IPVS") ->
 
 -spec(if_nametoindex(string()) -> {ok, non_neg_integer()} | {error, term()}).
 if_nametoindex(Ifname) ->
-    {ok, Fd} = packet:socket(),
+    Opts = get_opts(packet, ?ETH_P_IP, raw),
+    if_nametoindex2(Ifname, Opts).
+
+-spec(if_nametoindex(string(), string()) -> {ok, non_neg_integer()} | {error, term()}).
+if_nametoindex(Ifname, Netns) ->
+    Opts = get_opts(packet, ?ETH_P_IP, raw, Netns),
+    if_nametoindex2(Ifname, Opts).
+
+if_nametoindex2(Ifname, Opts) ->
+    {ok, Fd} = procket:open(0, Opts),
     try packet:ifindex(Fd, Ifname) of
         Idx when is_integer(Idx) andalso Idx >= 0 ->
             {ok, Idx}
@@ -106,22 +118,18 @@ start_link(netns, FamilyID, Netns) ->
 -spec(init([FamilyID :: non_neg_integer() | {netns, FamilyID :: non_neg_integer(), Netns :: string()}]) ->
     {ok, state_name(), state_data()}).
 init([{netns, FamilyID, Netns}]) ->
+    Opts = get_opts(netlink, FamilyID, dgram, Netns),
+    init2(Opts);
+init([FamilyID]) ->
+    Opts = get_opts(netlink, FamilyID, dgram),
+    init2(Opts).
+
+init2(Opts) ->
     Pid = list_to_integer(os:getpid()),
-    ProcketBin = filename:join(code:priv_dir(procket), procket),
-    Opts = [{family, netlink},
-            {protocol, FamilyID},
-            {type,dgram},
-            {progname, "nsenter -n" ++ Netns ++ " " ++ ProcketBin}],
     {ok, Fd} = procket:open(0, Opts),
     Port = erlang:open_port({fd, Fd, Fd}, [binary]),
     spawn_watch(Port, Fd),
-    State = #state{fd = Fd, port = Port, pid = Pid, family = FamilyID},
-    {ok, idle, State};
-init([FamilyID]) ->
-    Pid = list_to_integer(os:getpid()),
-    {ok, Fd} = procket:socket(netlink, dgram, FamilyID),
-    Port = erlang:open_port({fd, Fd, Fd}, [binary]),
-    spawn_watch(Port, Fd),
+    FamilyID = proplists:get_value(protocol, Opts),
     State = #state{fd = Fd, port = Port, pid = Pid, family = FamilyID},
     {ok, idle, State}.
 
@@ -205,12 +213,16 @@ do_reply(#rtnetlink{type = error, msg = {Error, _Payload}}, #state{last_rq_from 
     Replies1 = lists:reverse(Replies0),
     gen_statem:reply(From, {error, Error, Replies1}).
 
+get_opts(Family, FamilyID, Type) ->
+    [{family, Family},
+     {protocol, FamilyID},
+     {type, Type}].
 
-
-
-%idle({call, _From}, _EventContent, _Data) ->
-%
-%idle(_EventType, _EventContent, _Data) ->
+get_opts(Family, FamilyID, Type, Netns) ->
+    [{family, Family},
+     {protocol, FamilyID},
+     {type, Type},
+     {progname, "nsenter -n" ++ Netns ++ " " ++ ?PROCKETBIN}].    
 
 %% Returns ID, if generic family
 family_id({generic, Id, _Name}) ->
