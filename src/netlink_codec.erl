@@ -158,6 +158,16 @@
 -define(RTM_GETADDRLABEL, 74).
 -define(RTM_GETDCB, 78).
 -define(RTM_SETDCB, 79).
+-define(RTM_NEWNETCONF, 80).
+-define(RTM_GETNETCONF, 82).
+-define(RTM_NEWMDB, 84).
+-define(RTM_DELMDB, 85).
+-define(RTM_GETMDB, 86).
+-define(RTM_NEWNSID, 88).
+-define(RTM_DELNSID, 89).
+-define(RTM_GETNSID, 90).
+-define(RTM_NEWSTATS, 92).
+-define(RTM_GETSTATS, 94).
 
 -define(IPCTNL_MSG_CT_NEW, 0).
 -define(IPCTNL_MSG_CT_GET, 1).
@@ -368,7 +378,7 @@ encode_int32(NlaType, Val) ->
 %% encode_hint16(NlaType, Val) ->
 %% 	enc_nla(NlaType, <<Val:16/native-signed-integer>>).
 %% encode_hint32(NlaType, Val) ->
-%% 	enc_nla(NlaType, <<Val:32/native-signed-integer>>).
+%%     enc_nla(NlaType, <<Val:32/native-signed-integer>>).
 %% encode_hint64(NlaType, Val) ->
 %% 	enc_nla(NlaType, <<Val:64/native-signed-integer>>).
 
@@ -458,8 +468,8 @@ decode_int32(<< Val:32/signed-integer >>) ->
 %%     Val.
 %% decode_hint16(<< Val:16/native-signed-integer >>) ->
 %%     Val.
-%% decode_hint32(<< Val:32/native-signed-integer >>) ->
-%%     Val.
+decode_hint32(<< Val:32/native-signed-integer >>) ->
+    Val.
 %% decode_hint64(<< Val:64/native-signed-integer >>) ->
 %%     Val.
 
@@ -645,6 +655,13 @@ nl_enc_payload(rtnetlink, MsgType,{Family, IfIndex, PfxType, PfxLen, Flags, Req}
     Data = nl_enc_nla(Family, fun encode_rtnetlink_prefix/2, Req),
     << Fam:8, 0:8, 0:16, IfIndex:32/native-signed-integer, PfxType:8, PfxLen:8, Flags:8, 0:8, Data/binary >>;
 
+nl_enc_payload(nftables, MsgType, {Family, Version, ResId, Req0})
+  when MsgType == newobj; MsgType == getobj; MsgType == delobj; MsgType == getobj_reset ->
+    Fam = gen_socket:family(Family),
+    Req = nft_obj_encode_data(Fam, Req0, proplists:get_value(type, Req0), proplists:get_value(data, Req0)),
+    Data = nl_enc_nla(Family, fun encode_nft_obj_attributes/2, Req),
+    << Fam:8, Version:8, ResId:16/native-integer, Data/binary >>;
+
 nl_enc_payload(nftables, MsgType, {Family, Version, ResId, Req}) ->
     Fam = family(Family),
     Fun = case MsgType of
@@ -653,7 +670,8 @@ nl_enc_payload(nftables, MsgType, {Family, Version, ResId, Req}) ->
               _ when MsgType == newrule;    MsgType == getrule;    MsgType == delrule    -> fun encode_nft_rule_attributes/2;
               _ when MsgType == newset;     MsgType == getset;     MsgType == delset     -> fun encode_nft_set_attributes/2;
               _ when MsgType == newsetelem; MsgType == getsetelem; MsgType == delsetelem -> fun encode_nft_set_elem_list_attributes/2;
-              _ when MsgType == newgen;     MsgType == getgen                            -> fun encode_nft_gen_attributes/2
+              _ when MsgType == newgen;     MsgType == getgen                            -> fun encode_nft_gen_attributes/2;
+              _ when MsgType == trace                                                    -> fun encode_nft_trace_attributes/2
           end,
     Data = nl_enc_nla(Family, Fun, Req),
     << Fam:8, Version:8, ResId:16/native-integer, Data/binary >>;
@@ -731,11 +749,24 @@ nl_dec_payload(rtnetlink, MsgType, << Family:8, _Pad1:8, _Pad2:16, IfIndex:32/na
     when MsgType == newprefix; MsgType == delprefix ->
     Fam = family(Family),
     { Fam, IfIndex, PfxType, PfxLen, Flags, nl_dec_nla(Fam, fun decode_rtnetlink_prefix/3, Data) };
+
 %% struct rtmsg
 nl_dec_payload(rtnetlink, MsgType, << Family:8, DstLen:8, SrcLen:8, Tos:8, Table:8, Protocol:8, Scope:8, RtmType:8, Flags:32/native-integer, Data/binary >> )
     when MsgType == newrule; MsgType == delrule; MsgType == getrule ->
     Fam = family(Family),
     { Fam, DstLen, SrcLen, Tos, dec_rtm_table(Table), dec_rtm_protocol(Protocol), dec_rtm_scope(Scope), dec_rtm_type(RtmType), decode_rtnetlink_rtm_flags(Flags), nl_dec_nla(Fam, fun decode_rtnetlink_rule/3, Data) };
+
+nl_dec_payload(rtnetlink, MsgType, << Family:8, _Pad:24, Data/binary >>)
+  when MsgType == newnetconf; MsgType == getnetconf ->
+    Fam = gen_socket:family(Family),
+    { Fam, nl_dec_nla(Fam, fun decode_rtnetlink_netconf/3, Data) };
+
+nl_dec_payload(nftables, MsgType, << Family:8, Version:8, ResId:16/native-integer, Data/binary >>)
+  when MsgType == newobj; MsgType == getobj; MsgType == delobj; MsgType == getobj_reset ->
+    Fam = gen_socket:family(Family),
+    NLA0 = nl_dec_nla(Fam, fun decode_nft_obj_attributes/3, Data),
+    NLA = nft_obj_decode_data(Fam, NLA0, proplists:get_value(type, NLA0), proplists:get_value(data, NLA0)),
+    { Fam, Version, ResId, NLA };
 
 nl_dec_payload(nftables, MsgType, << Family:8, Version:8, ResId:16/native-integer, Data/binary >>) ->
     Fam = family(Family),
@@ -745,7 +776,8 @@ nl_dec_payload(nftables, MsgType, << Family:8, Version:8, ResId:16/native-intege
               _ when MsgType == newrule;    MsgType == getrule;    MsgType == delrule    -> fun decode_nft_rule_attributes/3;
               _ when MsgType == newset;     MsgType == getset;     MsgType == delset     -> fun decode_nft_set_attributes/3;
               _ when MsgType == newsetelem; MsgType == getsetelem; MsgType == delsetelem -> fun decode_nft_set_elem_list_attributes/3;
-              _ when MsgType == newgen;     MsgType == getgen                            -> fun decode_nft_gen_attributes/3
+              _ when MsgType == newgen;     MsgType == getgen                            -> fun decode_nft_gen_attributes/3;
+              _ when MsgType == trace                                                    -> fun decode_nft_trace_attributes/3
           end,
     { Fam, Version, ResId, nl_dec_nla(Fam, Fun, Data) };
 
@@ -987,4 +1019,22 @@ nft_encode(Family, "match", NLA) ->
 nft_encode(Family, "target", NLA) ->
     nl_enc_nla(Family, fun encode_nft_target_attributes/2, NLA);
 nft_encode(_Family, _Name, NLA) ->
+    NLA.
+
+nft_obj_decode_data(Fam, NLA, counter, Data) when is_binary(Data) ->
+    Counter = nl_dec_nla(Fam, fun decode_nft_counter_attributes/3, Data),
+    lists:keystore(data, 1, NLA, {data, Counter});
+nft_obj_decode_data(Fam, NLA, quota, Data) when is_binary(Data) ->
+    Quota = nl_dec_nla(Fam, fun decode_nft_quota_attributes/3, Data),
+    lists:keystore(data, 1, NLA, {data, Quota});
+nft_obj_decode_data(_Fam, NLA, _, _) ->
+    NLA.
+
+nft_obj_encode_data(Fam, NLA, counter, Data) when is_list(Data) ->
+    Counter = nl_enc_nla(Fam, fun encode_nft_counter_attributes/2, Data),
+    lists:keystore(data, 1, NLA, {data, Counter});
+nft_obj_encode_data(Fam, NLA, quota, Data) when is_list(Data) ->
+    Quota = nl_enc_nla(Fam, fun encode_nft_quota_attributes/2, Data),
+    lists:keystore(data, 1, NLA, {data, Quota});
+nft_obj_encode_data(_Fam, NLA, _, _) ->
     NLA.

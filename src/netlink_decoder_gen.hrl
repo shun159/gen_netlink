@@ -337,6 +337,36 @@ decode_rtm_msgtype_rtnetlink(?RTM_GETDCB) ->
 decode_rtm_msgtype_rtnetlink(?RTM_SETDCB) ->
     setdcb;
 
+decode_rtm_msgtype_rtnetlink(?RTM_NEWNETCONF) ->
+    newnetconf;
+
+decode_rtm_msgtype_rtnetlink(?RTM_GETNETCONF) ->
+    getnetconf;
+
+decode_rtm_msgtype_rtnetlink(?RTM_NEWMDB) ->
+    newmdb;
+
+decode_rtm_msgtype_rtnetlink(?RTM_DELMDB) ->
+    delmdb;
+
+decode_rtm_msgtype_rtnetlink(?RTM_GETMDB) ->
+    getmdb;
+
+decode_rtm_msgtype_rtnetlink(?RTM_NEWNSID) ->
+    newnsid;
+
+decode_rtm_msgtype_rtnetlink(?RTM_DELNSID) ->
+    delnsid;
+
+decode_rtm_msgtype_rtnetlink(?RTM_GETNSID) ->
+    getnsid;
+
+decode_rtm_msgtype_rtnetlink(?RTM_NEWSTATS) ->
+    newstats;
+
+decode_rtm_msgtype_rtnetlink(?RTM_GETSTATS) ->
+    getstats;
+
 decode_rtm_msgtype_rtnetlink(Value) ->
     Value.
 
@@ -451,6 +481,21 @@ decode_nl_msgtype_nftables(15) ->
 
 decode_nl_msgtype_nftables(16) ->
     getgen;
+
+decode_nl_msgtype_nftables(17) ->
+    trace;
+
+decode_nl_msgtype_nftables(18) ->
+    newobj;
+
+decode_nl_msgtype_nftables(19) ->
+    getobj;
+
+decode_nl_msgtype_nftables(20) ->
+    delobj;
+
+decode_nl_msgtype_nftables(21) ->
+    getobj_reset;
 
 decode_nl_msgtype_nftables(Value) ->
     Value.
@@ -1510,6 +1555,32 @@ decode_rtnetlink_prefix(_Family, Id, Value) ->
 
 %% ============================
 
+decode_rtnetlink_netconf(_Family, 0, Value) ->
+    {unspec, decode_none(Value)};
+
+decode_rtnetlink_netconf(_Family, 1, Value) ->
+    {ifindex, decode_hint32(Value)};
+
+decode_rtnetlink_netconf(_Family, 2, Value) ->
+    {forwarding, decode_hint32(Value)};
+
+decode_rtnetlink_netconf(_Family, 3, Value) ->
+    {rp_filter, decode_hint32(Value)};
+
+decode_rtnetlink_netconf(_Family, 4, Value) ->
+    {mc_filter, decode_hint32(Value)};
+
+decode_rtnetlink_netconf(_Family, 5, Value) ->
+    {proxy_neigh, decode_hint32(Value)};
+
+decode_rtnetlink_netconf(_Family, 6, Value) ->
+    {ignore_routes_with_linkdown, decode_hint32(Value)};
+
+decode_rtnetlink_netconf(_Family, Id, Value) ->
+    {Id, Value}.
+
+%% ============================
+
 decode_rtnetlink_rule(_Family, 0, Value) ->
     {unspec, decode_none(Value)};
 
@@ -2192,6 +2263,39 @@ decode_nft_counter_attributes(_Family, Id, Value) ->
 
 %% ============================
 
+%% ============================
+
+decode_nft_quota_attributes(_Family, 0, Value) ->
+    {unspec, decode_none(Value)};
+
+decode_nft_quota_attributes(_Family, 1, Value) ->
+    {bytes, decode_uint64(Value)};
+
+decode_nft_quota_attributes(_Family, 2, <<Value:32>>) ->
+    {flags, decode_nft_quota_attributes_flags(Value)};
+
+decode_nft_quota_attributes(_Family, 3, Value) ->
+    {pad, decode_binary(Value)};
+
+decode_nft_quota_attributes(_Family, 4, Value) ->
+    {consumed, decode_uint64(Value)};
+
+decode_nft_quota_attributes(_Family, Id, Value) ->
+    {Id, Value}.
+
+%% ============================
+
+decode_nft_quota_attributes_flags(0) ->
+    inverse;
+
+decode_nft_quota_attributes_flags(1) ->
+    depleted;
+
+decode_nft_quota_attributes_flags(Value) ->
+    Value.
+
+%% ============================
+
 decode_nft_table_attributes(_Family, 0, Value) ->
     {unspec, decode_none(Value)};
 
@@ -2445,6 +2549,116 @@ decode_nft_gen_attributes(_Family, 1, Value) ->
 
 decode_nft_gen_attributes(_Family, Id, Value) ->
     {Id, Value}.
+
+%% ============================
+
+decode_nft_trace_attributes(_Family, 0, Value) ->
+    {unspec, decode_none(Value)};
+
+decode_nft_trace_attributes(_Family, 1, Value) ->
+    {table, decode_string(Value)};
+
+decode_nft_trace_attributes(_Family, 2, Value) ->
+    {chain, decode_string(Value)};
+
+decode_nft_trace_attributes(_Family, 3, Value) ->
+    {rule_handle, decode_uint64(Value)};
+
+decode_nft_trace_attributes(_Family, 4, <<Value:32>>) ->
+    {type, decode_nft_trace_attributes_type(Value)};
+
+decode_nft_trace_attributes(Family, 5, Value) ->
+    {verdict, nl_dec_nla(Family, fun decode_nft_verdict_attributes/3, Value)};
+
+decode_nft_trace_attributes(_Family, 6, Value) ->
+    {id, decode_uint32(Value)};
+
+decode_nft_trace_attributes(_Family, 7, Value) ->
+    {ll_header, decode_binary(Value)};
+
+decode_nft_trace_attributes(_Family, 8, Value) ->
+    {network_header, decode_binary(Value)};
+
+decode_nft_trace_attributes(_Family, 9, Value) ->
+    {transport_header, decode_binary(Value)};
+
+decode_nft_trace_attributes(_Family, 10, Value) ->
+    {iif, decode_uint32(Value)};
+
+decode_nft_trace_attributes(_Family, 11, Value) ->
+    {iiftype, decode_uint16(Value)};
+
+decode_nft_trace_attributes(_Family, 12, Value) ->
+    {oif, decode_uint32(Value)};
+
+decode_nft_trace_attributes(_Family, 13, Value) ->
+    {oiftype, decode_uint16(Value)};
+
+decode_nft_trace_attributes(_Family, 14, Value) ->
+    {mark, decode_uint32(Value)};
+
+decode_nft_trace_attributes(_Family, 15, Value) ->
+    {nfproto, decode_uint32(Value)};
+
+decode_nft_trace_attributes(_Family, 16, Value) ->
+    {policy, decode_uint32(Value)};
+
+decode_nft_trace_attributes(_Family, Id, Value) ->
+    {Id, Value}.
+
+%% ============================
+
+decode_nft_trace_attributes_type(0) ->
+    unspec;
+
+decode_nft_trace_attributes_type(1) ->
+    policy;
+
+decode_nft_trace_attributes_type(2) ->
+    return;
+
+decode_nft_trace_attributes_type(3) ->
+    rule;
+
+decode_nft_trace_attributes_type(Value) ->
+    Value.
+
+%% ============================
+
+decode_nft_obj_attributes(_Family, 0, Value) ->
+    {unspec, decode_none(Value)};
+
+decode_nft_obj_attributes(_Family, 1, Value) ->
+    {table, decode_string(Value)};
+
+decode_nft_obj_attributes(_Family, 2, Value) ->
+    {name, decode_string(Value)};
+
+decode_nft_obj_attributes(_Family, 3, <<Value:32>>) ->
+    {type, decode_nft_obj_attributes_type(Value)};
+
+decode_nft_obj_attributes(_Family, 4, Value) ->
+    {data, decode_binary(Value)};
+
+decode_nft_obj_attributes(_Family, 5, Value) ->
+    {use, decode_uint32(Value)};
+
+decode_nft_obj_attributes(_Family, Id, Value) ->
+    {Id, Value}.
+
+%% ============================
+
+decode_nft_obj_attributes_type(0) ->
+    unspec;
+
+decode_nft_obj_attributes_type(1) ->
+    counter;
+
+decode_nft_obj_attributes_type(2) ->
+    quota;
+
+decode_nft_obj_attributes_type(Value) ->
+    Value.
 
 %% ============================
 
@@ -3199,6 +3413,36 @@ encode_rtm_msgtype_rtnetlink(getdcb) ->
 
 encode_rtm_msgtype_rtnetlink(setdcb) ->
     ?RTM_SETDCB;
+
+encode_rtm_msgtype_rtnetlink(newnetconf) ->
+    ?RTM_NEWNETCONF;
+
+encode_rtm_msgtype_rtnetlink(getnetconf) ->
+    ?RTM_GETNETCONF;
+
+encode_rtm_msgtype_rtnetlink(newmdb) ->
+    ?RTM_NEWMDB;
+
+encode_rtm_msgtype_rtnetlink(delmdb) ->
+    ?RTM_DELMDB;
+
+encode_rtm_msgtype_rtnetlink(getmdb) ->
+    ?RTM_GETMDB;
+
+encode_rtm_msgtype_rtnetlink(newnsid) ->
+    ?RTM_NEWNSID;
+
+encode_rtm_msgtype_rtnetlink(delnsid) ->
+    ?RTM_DELNSID;
+
+encode_rtm_msgtype_rtnetlink(getnsid) ->
+    ?RTM_GETNSID;
+
+encode_rtm_msgtype_rtnetlink(newstats) ->
+    ?RTM_NEWSTATS;
+
+encode_rtm_msgtype_rtnetlink(getstats) ->
+    ?RTM_GETSTATS;
 
 encode_rtm_msgtype_rtnetlink(Value) when is_integer(Value) ->
     Value.
@@ -5117,6 +5361,38 @@ encode_nft_counter_attributes(_Family, {Type, Value})
 
 %% ============================
 
+encode_nft_quota_attributes(_Family, {unspec, Value}) ->
+    encode_none(0, Value);
+
+encode_nft_quota_attributes(_Family, {bytes, Value}) ->
+    encode_uint64(1, Value);
+
+encode_nft_quota_attributes(_Family, {flags, Value}) ->
+    encode_uint32(2, encode_nft_quota_attributes_flags(Value));
+
+encode_nft_quota_attributes(_Family, {pad, Value}) ->
+    encode_binary(3, Value);
+
+encode_nft_quota_attributes(_Family, {consumed, Value}) ->
+    encode_uint64(4, Value);
+
+encode_nft_quota_attributes(_Family, {Type, Value})
+  when is_integer(Type), is_binary(Value) ->
+    enc_nla(Type, Value).
+
+%% ============================
+
+encode_nft_quota_attributes_flags(inverse) ->
+    0;
+
+encode_nft_quota_attributes_flags(depleted) ->
+    1;
+
+encode_nft_quota_attributes_flags(Value) when is_integer(Value) ->
+    Value.
+
+%% ============================
+
 encode_nft_table_attributes(_Family, {unspec, Value}) ->
     encode_none(0, Value);
 
@@ -5367,6 +5643,118 @@ encode_nft_set_ext_attributes(Family, {expr, Value}) ->
 encode_nft_set_ext_attributes(_Family, {Type, Value})
   when is_integer(Type), is_binary(Value) ->
     enc_nla(Type, Value).
+
+%% ============================
+
+encode_nft_trace_attributes(_Family, {unspec, Value}) ->
+    encode_none(0, Value);
+
+encode_nft_trace_attributes(_Family, {table, Value}) ->
+    encode_string(1, Value);
+
+encode_nft_trace_attributes(_Family, {chain, Value}) ->
+    encode_string(2, Value);
+
+encode_nft_trace_attributes(_Family, {rule_handle, Value}) ->
+    encode_uint64(3, Value);
+
+encode_nft_trace_attributes(_Family, {type, Value}) ->
+    encode_uint32(4, encode_nft_trace_attributes_type(Value));
+
+encode_nft_trace_attributes(Family, {verdict, Value}) ->
+    enc_nla(5, nl_enc_nla(Family, fun encode_nft_verdict_attributes/2, Value));
+
+encode_nft_trace_attributes(_Family, {id, Value}) ->
+    encode_uint32(6, Value);
+
+encode_nft_trace_attributes(_Family, {ll_header, Value}) ->
+    encode_binary(7, Value);
+
+encode_nft_trace_attributes(_Family, {network_header, Value}) ->
+    encode_binary(8, Value);
+
+encode_nft_trace_attributes(_Family, {transport_header, Value}) ->
+    encode_binary(9, Value);
+
+encode_nft_trace_attributes(_Family, {iif, Value}) ->
+    encode_uint32(10, Value);
+
+encode_nft_trace_attributes(_Family, {iiftype, Value}) ->
+    encode_uint16(11, Value);
+
+encode_nft_trace_attributes(_Family, {oif, Value}) ->
+    encode_uint32(12, Value);
+
+encode_nft_trace_attributes(_Family, {oiftype, Value}) ->
+    encode_uint16(13, Value);
+
+encode_nft_trace_attributes(_Family, {mark, Value}) ->
+    encode_uint32(14, Value);
+
+encode_nft_trace_attributes(_Family, {nfproto, Value}) ->
+    encode_uint32(15, Value);
+
+encode_nft_trace_attributes(_Family, {policy, Value}) ->
+    encode_uint32(16, Value);
+
+encode_nft_trace_attributes(_Family, {Type, Value})
+  when is_integer(Type), is_binary(Value) ->
+    enc_nla(Type, Value).
+
+%% ============================
+
+encode_nft_trace_attributes_type(unspec) ->
+    0;
+
+encode_nft_trace_attributes_type(policy) ->
+    1;
+
+encode_nft_trace_attributes_type(return) ->
+    2;
+
+encode_nft_trace_attributes_type(rule) ->
+    3;
+
+encode_nft_trace_attributes_type(Value) when is_integer(Value) ->
+    Value.
+
+%% ============================
+
+encode_nft_obj_attributes(_Family, {unspec, Value}) ->
+    encode_none(0, Value);
+
+encode_nft_obj_attributes(_Family, {table, Value}) ->
+    encode_string(1, Value);
+
+encode_nft_obj_attributes(_Family, {name, Value}) ->
+    encode_string(2, Value);
+
+encode_nft_obj_attributes(_Family, {type, Value}) ->
+    encode_uint32(3, encode_nft_obj_attributes_type(Value));
+
+encode_nft_obj_attributes(_Family, {data, Value}) ->
+    encode_binary(4, Value);
+
+encode_nft_obj_attributes(_Family, {use, Value}) ->
+    encode_uint32(5, Value);
+
+encode_nft_obj_attributes(_Family, {Type, Value})
+  when is_integer(Type), is_binary(Value) ->
+    enc_nla(Type, Value).
+
+%% ============================
+
+encode_nft_obj_attributes_type(unspec) ->
+    0;
+
+encode_nft_obj_attributes_type(counter) ->
+    1;
+
+encode_nft_obj_attributes_type(quota) ->
+    2;
+
+encode_nft_obj_attributes_type(Value) when is_integer(Value) ->
+    Value.
 
 %% ============================
 
